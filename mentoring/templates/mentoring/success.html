@@ -1,0 +1,16 @@
+{% extends 'mentoring/base.html' %}
+
+{% block content %}
+    <div class="uk-position-center">
+        <div class="uk-card uk-card-hover uk-card-body">
+            <h3 class="uk-heading-small uk-text-success uk-text-bottom">Alles fertig.</h3>
+            <p class="uk-width-xlarge">
+                Du hast dich erfolgreich beim Fachschaftsrat {{ faculty }} als Mentor*in registriert. Wenn du dich doch
+                wieder abmelden möchtest, kannst du den Link in der Mail anklicken, welche wir dir eben geschickt haben.
+            </p>
+            <a class="uk-button uk-button-default" href="{% url 'mentoring:index' %}">
+                Zur Startseite
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'mentoring/base.html' %}
+
+{% block content %}
+    <div class="uk-position-center">
+        <div class="uk-card uk-card-hover uk-card-body">
+            {% if token %}
+                <h3 class="uk-heading-small uk-text-{{ token.status }} uk-text-bottom">Nope.</h3>
+                <p class="uk-width-xlarge">
+                    {{ token.message }}
+                </p>
+            {% else %}
+                <h3 class="uk-heading-small uk-text-success uk-text-bottom">Bye.</h3>
+                <p class="uk-width-xlarge">
+                    Deine Registrierung wurde gelöscht.
+                </p>
+            {% endif %}
+            <a class="uk-button uk-button-default" href="{% url 'mentoring:index' %}">
+                Zur Startseite
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'mentoring/base.html' %}
+
+{% block content %}
+    <div class="uk-container uk-container-small uk-padding">
+        <h1 class="uk-heading-small">Mentoring-Programm</h1>
+        <p>
+            Das <a target="_blank" href="https://www.uni-magdeburg.de/Studium/Beratung+_+Unterst%C3%BCtzung/Von+Studierenden+f%C3%BCr+Studierende/Mentoring_+_+Tutoring/Mentor%2Ain+werden.html">Mentoring-Programm</a>
+            hilft Studierenden im ersten Semester sich an der Universität zurecht zu finden. Mentorinnen und Mentoren
+            geben dabei ihre Erfahrungen weiter und bieten so innerhalb der ersten Monate eine Orientierung. Die
+            Begleitung und Beratung von Studierenden für Studierende ist eine Form zur Förderung personaler und
+            sozialer Kompetenzen und dient der Steigerung des erfolgreichen Studiums.
+        </p>
+
+        <div class="uk-description-list">
+            <dt>Qualifizierung</dt>
+            <dd>
+                Die Schulung zur Qualifizierung als Mentorin oder Mentor dient der fachgerechten Ausbildung. Dabei
+                werden in ungefähr 6h inhaltliche Themen zur kompetenten Betreuung erlernt und verschiedene Methoden
+                zur Förderung der Gruppenbildung unter den Erstsemester-Studierenden gezeigt.
+            </dd>
+
+            <dt>Supervision</dt>
+            <dd>
+                Die Reflexion bzw. Supervision findet einige Wochen nach dem Beginn des neuen Semesters statt. Hier
+                sollen die Mentorinnen und Mentoren sich miteinander austauschen und ihre gesammelten Erfahrungen unter
+                einander diskutieren. Dabei werden sie von einem geschulten Tutor betreut, welcher auch ggf. Fachwissen
+                zu offenen Fragestellungen oder Problemen beitragen kann.
+            </dd>
+
+            <dt>Zertifikat</dt>
+            <dd>
+                Nach dem Semester gibt es für alle Mentorinnen und Mentoren, welche erfolgreich ihre Tätigkeit
+                wahrgenommen haben ein von der Universität ausgestelltes Zertifikat. Jenes beschreibt die geleistete
+                Arbeit und ggf. die Teilnahme an den beiden Schulungen. Besonders gut lässt sich solch eine
+                Zertifizierung bei Bewerbungsschreiben einbringen.
+            </dd>
+        </div>
+
+        <h3>Zur Registrierung</h3>
+        {% for faculty in faculty_list %}
+            <a class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" href="{% url 'mentoring:create' faculty.slug %}" style="color: {{ faculty.color_as_hex }}">{{ faculty.name }}</a>
+        {% endfor %}
+    </div>
+{% endblock %}

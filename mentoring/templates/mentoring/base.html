@@ -1,0 +1,17 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mentoring</title>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'mentoring/css/uikit.min.css' %}">
+    </head>
+    <body>
+        {% block content %}{% endblock %}
+
+        <script src="{% static 'mentoring/js/uikit.min.js' %}"></script>
+        <script src="{% static 'mentoring/js/uikit-icons.min.js' %}"></script>
+    </body>
+</html>
