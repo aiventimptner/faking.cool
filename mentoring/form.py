@@ -19,7 +19,7 @@ class MentorForm(forms.ModelForm):
         faculty = kwargs.pop('faculty', None)
         super().__init__(*args, **kwargs)
         self.fields['faculty'].initial = faculty
-        self.fields['program'].queryset = Program.objects.filter(faculty=faculty)
+        self.fields['program'].queryset = Program.objects.order_by('name').filter(faculty=faculty)
 
         if faculty.ask_for_phone:
             self.fields['phone'].required = True
