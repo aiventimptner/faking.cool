@@ -88,6 +88,7 @@ DATABASES = {
 # Email
 # https://docs.djangoproject.com/en/3.0/ref/settings/#email
 
+EMAIL_USE_TLS = True
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
@@ -133,6 +134,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Secure Connections
+
 CSRF_COOKIE_SECURE = True
 SECURE_REFERRER_POLICY = 'origin'
 SECURE_SSL_REDIRECT = False  # nginx already redirects http traffic to https
