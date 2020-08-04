@@ -8,8 +8,9 @@ from .models import Mentor, Faculty, Program
 
 @admin.register(Mentor)
 class MentorAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'qualification', 'supervision', 'created')
-    list_filter = ('faculty', 'program')
+    list_display = ['__str__', 'qualification', 'supervision', 'created']
+    list_filter = ['faculty', 'program']
+    ordering = ['first_name', 'last_name']
     actions = ['export_as_csv']
 
     def export_as_csv(self, request, queryset):
@@ -32,9 +33,12 @@ class MentorAdmin(admin.ModelAdmin):
 
 @admin.register(Faculty)
 class FacultyAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'slug', 'ask_for_phone', 'ask_for_program', 'deadline']
+    ordering = ['slug']
 
 
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'slug']
+    list_filter = ['faculty']
+    ordering = ['slug']
