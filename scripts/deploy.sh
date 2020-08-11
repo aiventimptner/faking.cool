@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+# ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
 
 echo ">>>> Connect to remote location <<<<"
 ssh -p "$PORT" "$USERNAME@$HOST" << EOF
