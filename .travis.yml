@@ -1,0 +1,20 @@
+language: python
+python: 3.8
+
+branches:
+  only:
+    - master
+
+install: pip install -r requirements.txt
+script: python manage.py test
+deploy:
+  provider: script
+  script: bash scripts/deploy.sh
+  on:
+    branch: master
+
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: 0E+motYdvv0arhKyTc/8j4FoJ3YtfOmawb3XmI22Ml2C5gowlEKZSVb02B3NyOj6AuO/wiFJUw+CBnqo9LLx4qssSUyk1MpN86Z4xFQcUFPaMn/Gt/fAhUyy+s19RqWM/ZM8BXUKWE04xKbrVwbrbRcLdS5z+8mwe8QkSYbSes6JLbzX/PkaPTfsCgvtX+zXgVz6oEnnWGZ0yzZtWhkTsOEaW1arLC1xJOglSERVl0MDYmycPnws0pbkx9w2oIT68ROPdZoREP4eYhYeU7TZIqJlZ/o8MUcz6jMGw1BjH2B52Kk7wkWv4aeB2yY+X8e9zfNN2A7J8iwhqADoWFimdNxR8cry25xbx38gCSSKubVmSnmgMBSl3XuGE7p3b5Ld25R22QEN+MeG14tr+6NZZeR5nR0JixZzeCmztiouX1HbUDDLHhBQgtpEecX+l00OlsvKExa/CO5pmrLlg+S4AUtg4kSpxuxfc0DB9/MSa7GSF1DKWoaD1zIDqzAG/SUVZDbUf9BpBaIZk4pCAp+eXfl9QG8hctGem0YuaqgIar4ox83LXIQgmzolGRw52cKKmCyEJAFjh/26E7ONsd3Vkmk7qd52GpphZOEk/J/fKmz64NSQ60I+fZjjAoFW9eLhRKa/Q0dyctqqlqoDMJbLInQJIJY7fW6QK+4p1odaB+A=
