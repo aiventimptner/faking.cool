@@ -10,6 +10,7 @@ git pull
 pip install -r requirements.txt
 python manage.py collectstatic --clear --no-input
 python manage.py check --deploy
+python manage.py migrate
 deactivate
 echo "$PASSWORD" | sudo -S systemctl restart gunicorn
 systemctl status gunicorn
