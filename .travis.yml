@@ -4,16 +4,17 @@ branches:
   only:
   - master
 addons:
-  ssh_known_hosts: server.faking.cool:1993
+  ssh_known_hosts:
+    secure: RBvYVjONUaG2CFEMBaqdPDHbwhuoYXEguY0wmba41DhODjLXNjCNJsSPygVnmhxsWBGltJ7wWkDHeA0BwBuuDflVfSFdS/28pVoRm0lfO+zQ93p3kREVzcf3nzOEKO54PN4DTFAFNEH5XSBRQFlSNsvCDZV20tzkxLJ8pWIkWoAatFRWqRPHUSCR2K/ZJaUGPKeMb1xoQsRSNPcooLj0y+mCcw+qNiZZg3cTL0SstoLi51IKWPrBV8q659VwQWeNEa6tu1IJh29lmSxgQWBBpptWMAHkhg1p5S2xRM9NAMBvn1CwSgoCBIfNixCi2pj1PLIQCPmwPbWhhKLhK8H9YtD3tLemobTEnr41BQAi+H6qFIMiUWkSDzXwJD2k4/JLo9V9kOhc2Y9fn4kGcDc8YLb4XnjJv7IqRL3/f41QaxvAPHudQ7SZm30bIGrvLe2VFXLKrrY3hbr/K1neyFilMRW+F4chdJBTmCeRguQI4XhpbQj4qEGwV2LTOBShCLqT5wDTwe7pspqC8aC+xHrZVHvJOuE1L0Psap7kCPuzEMbCOjrL9wGyHEC6n/2YIGllw1ndG/N3ZIKiGRbCSHtmnyUous7gok22yeT6Brbz5yshTyJX0BW3RIe0K5rgW5H8tNF+6W2gU1M/xgauaSsaXbgXyeMRyvXubhLwU/ewhl0=
 install: pip install -r requirements.txt
 script: python manage.py test
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
-    -in .travis/deploy_rsa.enc -out .travis/deploy_rsa -d
-  - eval "$(ssh-agent -s)"
-  - cp .travis/deploy_rsa ~/.ssh/deploy_rsa
-  - chmod 600 ~/.ssh/deploy_rsa
-  - ssh-add ~/.ssh/deploy_rsa
+- openssl aes-256-cbc -K $encrypted_db2095f63ba3_key -iv $encrypted_db2095f63ba3_iv
+  -in .travis/deploy_rsa.enc -out .travis/deploy_rsa -d
+- eval "$(ssh-agent -s)"
+- cp .travis/deploy_rsa ~/.ssh/deploy_rsa
+- chmod 600 ~/.ssh/deploy_rsa
+- ssh-add ~/.ssh/deploy_rsa
 deploy:
   provider: script
   script: bash scripts/deploy.sh
