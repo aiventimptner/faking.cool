@@ -1,6 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-sshpass -p "$PASSWORD" ssh "$USERNAME@$HOST" -p "$PORT" << EOF
+set -e
+
+ssh-keyscan -H "$HOST" >>~/.ssh/known_hosts
+
+ssh -p "$PORT" "$USERNAME@$HOST" << EOF
 cd $DIR
 git pull
 . venv/bin/activate
