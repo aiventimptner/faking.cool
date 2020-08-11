@@ -1,9 +1,8 @@
 #!/bin/bash
-
 set -e
+ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
 
-ssh-keyscan -H "$HOST" >>~/.ssh/known_hosts
-
+echo ">>>> Connect to remote location <<<<"
 ssh -p "$PORT" "$USERNAME@$HOST" << EOF
 cd $DIR
 git pull
@@ -16,3 +15,4 @@ deactivate
 echo "$PASSWORD" | sudo -S systemctl restart gunicorn
 systemctl status gunicorn
 EOF
+echo ">>>> Finished deploy process <<<<"
