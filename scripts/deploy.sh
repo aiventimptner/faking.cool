@@ -3,7 +3,7 @@ set -e
 # ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
 
 echo ">>>> Connect to remote location <<<<"
-ssh -p "$PORT" "$USERNAME@$HOST" << EOF
+ssh -p "$PORT" "$USER@$HOST" << EOF
 cd $DIR
 git pull
 . venv/bin/activate
