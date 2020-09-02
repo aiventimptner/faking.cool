@@ -3,25 +3,7 @@ python: 3.8
 branches:
   only:
   - master
-addons:
-  ssh_known_hosts:
-    secure: liiX0o7cUy9PdbVy1Huoe6IVpGL3XzREAtrUAKdjBAxXTKI7SaGa0L1SPIyAoYXw6mGFbfdz2+fqMe3QWvYOHY2p2HwxWZ8I2NRJ3g8GFEhEopwEIugkqwIaXvLJWDT0rSG2h2/Wj+cNu6ZFBQZXZHb9miSqW1qSmpqoS6avvDW1XR5Rb4CW9LHmuiRr1+G3FepGSiN8krO1cgtf62e9YgVwHBweyD+uHchzlEvLeWjS2s9sKP+nRq56la6yKZ0EK003dtIMTubN8BvkHcqopYqtdzEGi+prMpKEJ86jvXd2Hnu9VZKg4aBZcxD70rmMZySEucIJ7oqBHLQfy1BpEC4ZqzlNblwX0fVe6UFx3+GDKK94sbUWwA+IwF3cgW0GhtkUXkmsoyjyDx8eG/JLGuWyZsYPPGK6/W4L7KY02T4b4mp09eOQsCDij406aYcVvzcExz9vwysKQcZp0I+bjj80Gzze5KVqO+pX8LY3dBrM8EQFzWZ97nuNz8j99IXGjOqcMBewlRGTc3vW60oiqIgTG5lxWOxpDyYKN8TNZcQ7ROZV1RG+vVd9+wR7ValYIzQ0wcLJXWGPPR5N/Jsw+hqP93WVSsrDpWXN88AnfLArhNM7+97mV13N0PQFagyRbEcqY3vPavZU86HDD6kw7j/hNK9I+RUWcEs09i0kM20=
 install: pip install -r requirements.txt
 script: python manage.py test
-before_deploy:
-- openssl aes-256-cbc -K $encrypted_63cbc52e9149_key -iv $encrypted_63cbc52e9149_iv
-  -in .travis/deploy_rsa.enc -out .travis/deploy_rsa -d
-- eval "$(ssh-agent -s)"
-- cp .travis/deploy_rsa ~/.ssh/deploy_rsa
-- chmod 600 ~/.ssh/deploy_rsa
-- ssh-add ~/.ssh/deploy_rsa
-deploy:
-  provider: script
-  script: bash scripts/deploy.sh
-  on:
-    branch: master
 notifications:
   email: false
-  slack:
-    rooms:
-      secure: hPjus2rtsZmpvxM4ddiryMjp0GdKGfuC3hz+FyI1/oDMtcH6EEO8bjczp53qL1bnVBZEofqiktYGdKz1Tq8xtOsvrMqI6AaDt4lGbQen/Y1Rku5FzXPNbaaxLSq6qzw0CbiVQwMB15SRsXbvejyCQUWyhEcgu3EwXXfaVoDem2hDrUx04N24e/Qk+y61uPBVa2gYQ/BNk1Rz3yfuiaweGUtQHbHBCdCL+m/wKv6qWWnwkb1b8HUX54s17FK0f78nh7r/BWZQSUwvQ/LKFgva4pGiPS/koVv7Y/J7XsExS9apikZxo0PApzFbq5nbeEyH6clIljrbxK6i9fGerQnyDKD9IFQx2q/58wSHM/0yesU18p2Bw7SW3GHzmTGg+yIhf5KsbC3G+8RLP5QpcVn+rxCAzsY9Idb0QRB1x2yaNHF3jm6YTEAXlnyB4GQA491dnp1qlLDbBMrb/UyX35hQNPzKaH8zCyJ6yFj5ROSrwzcQ2uEPWFvPEpIxiNzY5rMiAGjxZPXC0504bNbds5RE1tp+B0RgYBK3RMxtUkIodLJXzXfOl3E/UAJa3dkL49WINtghdOqbiQl3kJ2oKcZpqn6kk8siF3QJdIBmwVgdrKi95L73zFBd4gzIYyhkzZWBn/k/7GPU79agHjs7F9zz5ALPw2EW309733a425RyaLI=
