@@ -1,8 +1,8 @@
 {% extends 'mentoring/base.html' %}
 
 {% block content %}
-    <div class="uk-container uk-container-small uk-padding">
-        <h1 class="uk-heading-small">Mentoring-Programm</h1>
+    <div class="uk-container uk-container-small uk-height-viewport uk-background-default">
+        <h1 class="uk-heading-small uk-margin-top">Mentoring-Programm</h1>
         <p>
             Das <a target="_blank" href="https://www.uni-magdeburg.de/Studium/Beratung+_+Unterst%C3%BCtzung/Von+Studierenden+f%C3%BCr+Studierende/Mentoring_+_+Tutoring/Mentor%2Ain+werden.html">Mentoring-Programm</a>
             hilft Studierenden im ersten Semester sich an der Universität zurecht zu finden. Mentorinnen und Mentoren
@@ -11,7 +11,7 @@
             sozialer Kompetenzen und dient der Steigerung des erfolgreichen Studiums.
         </p>
 
-        <div class="uk-description-list">
+        <ul class="uk-description-list uk-padding-remove-horizontal">
             <dt>Qualifizierung</dt>
             <dd>
                 Die Schulung zur Qualifizierung als Mentorin oder Mentor dient der fachgerechten Ausbildung. Dabei
@@ -34,11 +34,14 @@
                 Arbeit und ggf. die Teilnahme an den beiden Schulungen. Besonders gut lässt sich solch eine
                 Zertifizierung bei Bewerbungsschreiben einbringen.
             </dd>
-        </div>
+        </ul>
 
         <h3>Zur Registrierung</h3>
+        <div class="uk-margin-bottom">
         {% for faculty in faculty_list %}
-            <a class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" href="{% url 'mentoring:create' faculty.slug %}" style="color: {{ faculty.color_as_hex }}">{{ faculty.name }}</a>
+            <a class="uk-button uk-button-secondary uk-margin-small-bottom" href="{% url 'mentoring:create' faculty.slug %}" style="background-color: {{ faculty.color_as_hex }}">{{ faculty.slug|upper }}</a>
         {% endfor %}
+            <a class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom" href="{% url 'mentoring:mentee' %}">Registrierung für Erstsemester</a>
+        </div>
     </div>
 {% endblock %}

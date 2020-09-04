@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .models import Faculty, Mentor
-from .form import MentorForm
+from .forms import MentorForm, MenteeForm
 
 
 class IndexView(generic.ListView):
@@ -18,7 +18,7 @@ class IndexView(generic.ListView):
 
 
 class MentorCreate(generic.edit.CreateView):
-    template_name = 'mentoring/form.html'
+    template_name = 'mentoring/mentor/form.html'
     form_class = MentorForm
     success_url = 'success/'
 
@@ -38,7 +38,7 @@ class MentorCreate(generic.edit.CreateView):
 
 
 class SuccessView(generic.TemplateView):
-    template_name = 'mentoring/success.html'
+    template_name = 'mentoring/mentor/success.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -47,7 +47,7 @@ class SuccessView(generic.TemplateView):
 
 
 class TokenView(generic.TemplateView):
-    template_name = 'mentoring/delete.html'
+    template_name = 'mentoring/mentor/delete.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -74,3 +74,17 @@ class TokenView(generic.TemplateView):
 class MentorDelete(generic.edit.DeleteView):
     model = Mentor
     success_url = reverse_lazy('mentoring:delete')
+
+
+class MenteeCreate(generic.edit.CreateView):
+    template_name = 'mentoring/mentee/form.html'
+    form_class = MenteeForm
+    success_url = 'success/'
+
+    def form_valid(self, form):
+        form.send_email(self.request)
+        return super().form_valid(form)
+
+
+class MenteeSuccess(generic.TemplateView):
+    template_name = 'mentoring/mentee/success.html'

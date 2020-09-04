@@ -3,18 +3,11 @@
 {% block content %}
     <div class="uk-container uk-container-small uk-margin-top uk-margin-bottom">
         <div class="uk-card uk-card-default">
-            <div class="uk-card-header" style="background-color: {{ faculty.color_as_hex }};">
-                <h5 class="uk-text-center" style="color: #FFFFFF">Fachschaftsrat {{ faculty.name }}</h5>
-            </div>
-
             <div class="uk-card-body">
-                <h3 class="uk-card-title uk-margin-remove-bottom">Registrierung als Mentor*in</h3>
+                <h3 class="uk-card-title uk-margin-remove-bottom">Datenerfassung für Mentees</h3>
 
                 <p class="uk-text-small uk-margin-remove-top">
-                    Eine <span class="uk-text-bold uk-text-warning">verbindliche</span> Registrierung ist bis
-                    einschließlich <span class="uk-text-bold uk-text-warning">{{ faculty.deadline }}</span> möglich.
-                    Sollte die Teilnahme am Mentoring-Programm unerwartet doch nicht möglich sein, muss eine Abmeldung
-                    über den Fachschaftsrat erfolgen.
+                    Zur schnellen Identifizierung von möglichen Infektionsketten benötigen wir eure Kontaktdaten.
                 </p>
 
                 {% if form.errors %}
@@ -29,10 +22,10 @@
 
                         {% csrf_token %}
 
-                        {{ form.faculty }}
-
                         <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                            <label class="uk-form-label" for="{{ form.first_name.id_for_label }}">
+                                {{ form.first_name.label }}
+                            </label>
 
                             {{ form.first_name }}
 
@@ -46,7 +39,9 @@
                         </div>
 
                         <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                            <label class="uk-form-label" for="{{ form.last_name.id_for_label }}">
+                                {{ form.last_name.label }}
+                            </label>
 
                             {{ form.last_name }}
 
@@ -59,8 +54,10 @@
                             {% endif %}
                         </div>
 
-                        <div class="uk-width-1-1">
-                            <label class="uk-form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                        <div class="uk-width-1-2@s">
+                            <label class="uk-form-label" for="{{ form.email.id_for_label }}">
+                                {{ form.email.label }}
+                            </label>
 
                             {{ form.email }}
 
@@ -74,7 +71,9 @@
                         </div>
 
                         <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                            <label class="uk-form-label" for="{{ form.phone.id_for_label }}">
+                                {{ form.phone.label }}
+                            </label>
 
                             {{ form.phone }}
 
@@ -88,12 +87,14 @@
                         </div>
 
                         <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.program.id_for_label }}">{{ form.program.label }}</label>
+                            <label class="uk-form-label" for="{{ form.address.id_for_label }}">
+                                {{ form.address.label }}
+                            </label>
 
-                            {{ form.program }}
+                            {{ form.address }}
 
-                            {% if form.program.errors %}
-                                {% for error in form.program.errors %}
+                            {% if form.address.errors %}
+                                {% for error in form.address.errors %}
                                     <p class="uk-text-small uk-text-danger uk-margin-remove">
                                         {{ error }}
                                     </p>
@@ -102,21 +103,14 @@
                         </div>
 
                         <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.qualification.id_for_label }}">
-                                {{ form.qualification }} {{ form.qualification.label }}
-                            </label><br>
-                            <label class="uk-form-label" for="{{ form.supervision.id_for_label }}">
-                                {{ form.supervision }} {{ form.supervision.label }}
+                            <label class="uk-form-label" for="{{ form.mentor.id_for_label }}">
+                                {{ form.mentor.label }}
                             </label>
 
-                            {% if form.qualification.errors or form.supervision.erros %}
-                                {% for error in form.qualification.errors %}
-                                    <p class="uk-text-small uk-text-danger uk-margin-remove">
-                                        {{ error }}
-                                    </p>
-                                {% endfor %}
+                            {{ form.mentor }}
 
-                                {% for error in form.supervision.errors %}
+                            {% if form.mentor.errors %}
+                                {% for error in form.mentor.errors %}
                                     <p class="uk-text-small uk-text-danger uk-margin-remove">
                                         {{ error }}
                                     </p>
@@ -126,7 +120,11 @@
 
                         <div class="uk-width-1-2@s">
                             <label class="uk-form-label" for="id_privacy">
-                                <input id="id_privacy" class="uk-checkbox" type="checkbox" name="privacy"> Einwilligung zur <a target="_blank" class="uk-link" href="https://stura-md.de/datenschutz/">Datenschutzerklärung</a>
+                                <input id="id_privacy" class="uk-checkbox" type="checkbox" name="privacy">
+                                Einwilligung zur
+                                <a target="_blank" class="uk-link" href="https://stura-md.de/datenschutz/">
+                                    Datenschutzerklärung
+                                </a>
                             </label>
 
                             {% if form.privacy.errors %}
@@ -149,7 +147,10 @@
                 </form>
             </div>
             <div class="uk-card-footer">
-                <p class="uk-text-meta uk-text-italic">Die angegebenen Daten werden für maximal 12 Monate gespeichert und anschließend gelöscht. Es werden Vorname, Nachname sowie E-Mail Adresse zur Anmeldung für die Schulungen an die <a target="_blank" class="uk-link" href="https://www.ovgu.de/">Otto-von-Guericke-Universität Magdeburg</a> weiter gegeben.</p>
+                <p class="uk-text-meta uk-text-italic">
+                    Die angegebenen Daten werden für maximal 2 Monate gespeichert und anschließend gelöscht.
+                    Eine Weitergabe der Daten an Dritte erfolgt ggf. an das Gesundheitsamt.
+                </p>
             </div>
         </div>
     </div>

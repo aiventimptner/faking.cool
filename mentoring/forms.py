@@ -3,13 +3,14 @@ import jwt
 from datetime import datetime, date, time, timedelta
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from markdown import markdown
 
-from .models import Program, Mentor
+from .models import Program, Mentor, Mentee, Faculty
 
 
 class MentorForm(forms.ModelForm):
@@ -78,7 +79,7 @@ class MentorForm(forms.ModelForm):
             'date': faculty.deadline - timedelta(weeks=1),
             'faculty': faculty
         }
-        message = render_to_string('mentoring/mail.md', data)
+        message = render_to_string('mentoring/mail/mentor.md', data)
         send_mail(  # TODO set 'reply to' to fara mail
             "Du hast dich erfolgreich registriert.",
             message,
@@ -112,6 +113,64 @@ class MentorForm(forms.ModelForm):
         }
         error_messages = {
             'email': {
-                'unique': "Ein Student*in mit dieser E-Mail Adresse ist bereits registriert.",
+                'unique': "Ein Student oder eine Studentin mit dieser E-Mail Adresse ist bereits registriert.",
+            }
+        }
+
+
+class MenteeForm(forms.ModelForm):
+    MENTOR_LIST = [(mentor.pk, mentor.slug) for mentor in Mentor.objects.all()]
+
+    mentor = forms.ChoiceField(
+        choices=[('', "---------")] + MENTOR_LIST,
+        widget=forms.Select(attrs={'class': 'uk-select'}),
+        label='Mentor bzw. Mentorin',
+        required=True,
+    )
+    privacy = forms.BooleanField(required=True)
+
+    def clean_mentor(self):
+        data = self.cleaned_data['mentor']
+        try:
+            mentor = Mentor.objects.get(pk=data)
+
+        except ObjectDoesNotExist:
+            raise ValidationError("Ein Mentor bzw. eine Mentorin mit dieser ID existiert nicht.")
+
+        return mentor
+
+    def send_email(self, request):
+        first_name = self.cleaned_data['first_name']
+        email = self.cleaned_data['email']
+        mentor = self.cleaned_data['mentor']
+        message = render_to_string('mentoring/mail/mentee.md', {'name': first_name, 'faculty': mentor.faculty})
+        send_mail(  # TODO set 'reply to' to fara mail
+            "Du hast dich erfolgreich registriert.",
+            message,
+            settings.EMAIL_HOST_USER,
+            [email],
+            html_message=markdown(message)
+        )
+
+    class Meta:
+        model = Mentee
+        fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'mentor']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
+            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
+            'email': forms.EmailInput(attrs={'class': 'uk-input'}),
+            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
+            'address': forms.TextInput(attrs={'class': 'uk-input'}),
+        }
+        labels = {
+            'first_name': "Vorname",
+            'last_name': "Nachname",
+            'email': "E-Mail Adresse",
+            'phone': "Mobilnummer",
+            'address': 'Anschrift',
+        }
+        error_messages = {
+            'email': {
+                'unique': "Ein Student oder eine Studentin mit dieser E-Mail Adresse ist bereits registriert.",
             }
         }

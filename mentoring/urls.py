@@ -9,4 +9,6 @@ urlpatterns = [
     path('<slug:faculty_slug>/create/success/', views.SuccessView.as_view(), name='success'),
     path('token/<token>', views.TokenView.as_view(), name='token'),
     path('delete/', views.MentorDelete.as_view(), name='delete'),
+    path('mentee/', views.MenteeCreate.as_view(), name='mentee'),
+    path('mentee/success/', views.MenteeSuccess.as_view(), name='mentee-success'),
 ]

@@ -9,7 +9,9 @@
         <link rel="stylesheet" type="text/css" href="{% static 'mentoring/css/uikit.min.css' %}">
     </head>
     <body>
-        {% block content %}{% endblock %}
+        <div class="uk-section uk-padding-remove-vertical uk-height-viewport" style="background-color: #7A003F">
+            {% block content %}{% endblock %}
+        </div>
 
         <script src="{% static 'mentoring/js/uikit.min.js' %}"></script>
         <script src="{% static 'mentoring/js/uikit-icons.min.js' %}"></script>
