@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 from markdown import markdown
 
-from .models import Program, Mentor, Mentee, Faculty
+from .models import Program, Mentor, Mentee
 
 
 class MentorForm(forms.ModelForm):
