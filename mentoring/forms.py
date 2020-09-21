@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.shortcuts import get_list_or_404
 from django.urls import reverse
 from django.utils import timezone
 from markdown import markdown
@@ -129,7 +130,7 @@ class MenteeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.mentor.choices += [(mentor.pk, mentor.slug) for mentor in Mentor.objects.all()]
+        self.fields['mentor'].choices += [(mentor.pk, mentor.slug) for mentor in get_list_or_404(Mentor)]
 
     def clean_mentor(self):
         data = self.cleaned_data['mentor']
