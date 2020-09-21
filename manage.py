@@ -9,7 +9,7 @@ load_dotenv()
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'horizon.settings.development')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'faking.settings.development')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

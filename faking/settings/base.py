@@ -31,7 +31,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'horizon.urls'
+ROOT_URLCONF = 'faking.urls'
 
 TEMPLATES = [
     {
@@ -49,7 +49,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'horizon.wsgi.application'
+WSGI_APPLICATION = 'faking.wsgi.application'
 
 
 # Database
