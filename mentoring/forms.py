@@ -119,15 +119,17 @@ class MentorForm(forms.ModelForm):
 
 
 class MenteeForm(forms.ModelForm):
-    MENTOR_LIST = [(mentor.pk, mentor.slug) for mentor in Mentor.objects.all()]
-
     mentor = forms.ChoiceField(
-        choices=[('', "---------")] + MENTOR_LIST,
+        choices=[('', "---------")],
         widget=forms.Select(attrs={'class': 'uk-select'}),
         label='Mentor bzw. Mentorin',
         required=True,
     )
     privacy = forms.BooleanField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mentor.choices += [(mentor.pk, mentor.slug) for mentor in Mentor.objects.all()]
 
     def clean_mentor(self):
         data = self.cleaned_data['mentor']
