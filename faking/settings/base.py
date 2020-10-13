@@ -2,6 +2,7 @@ import os
 
 from pathlib import Path
 
+
 # General settings
 
 BASE_DIR = Path(__file__).parents[2]
@@ -36,7 +37,7 @@ ROOT_URLCONF = 'faking.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -51,6 +52,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'faking.wsgi.application'
 
+
 # Database
 
 DATABASES = {
@@ -60,12 +62,17 @@ DATABASES = {
     }
 }
 
+
 # Email
 
 EMAIL_USE_TLS = True
+
 EMAIL_HOST = os.getenv('SMTP_HOST')
+
 EMAIL_PORT = os.getenv('SMTP_PORT')
+
 EMAIL_HOST_USER = os.getenv('SMTP_USERNAME')
+
 EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD')
 
 
@@ -100,7 +107,10 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
