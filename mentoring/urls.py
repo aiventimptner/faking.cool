@@ -1,14 +1,16 @@
 from django.urls import path
+from django.shortcuts import redirect
 
 from . import views
 
 app_name = 'mentoring'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('<slug:faculty_slug>/create/', views.MentorCreate.as_view(), name='create'),
-    path('<slug:faculty_slug>/create/success/', views.SuccessView.as_view(), name='success'),
-    path('token/<token>', views.TokenView.as_view(), name='token'),
-    path('delete/', views.MentorDelete.as_view(), name='delete'),
-    path('mentee/', views.MenteeCreate.as_view(), name='mentee'),
+    path('mentor/', lambda request: redirect('mentoring:index')),
+    path('mentor/<slug:faculty>/', views.MentorCreate.as_view(), name='mentor-create'),
+    path('mentor/<slug:faculty>/success/', views.MentorSuccess.as_view(), name='mentor-success'),
+    path('token/<token>', views.MentorToken.as_view(), name='mentor-token'),
+    path('mentor/delete/', views.MentorDelete.as_view(), name='mentor-delete'),
+    path('mentee/', views.MenteeCreate.as_view(), name='mentee-create'),
     path('mentee/success/', views.MenteeSuccess.as_view(), name='mentee-success'),
 ]

@@ -1,12 +1,12 @@
 import jwt
+import random
 
 from datetime import datetime, date, time, timedelta
-from django import forms
+from django.forms import ModelForm, BooleanField, TextInput, EmailInput, Select, CheckboxInput
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.shortcuts import get_list_or_404
 from django.urls import reverse
 from django.utils import timezone
 from markdown import markdown
@@ -14,71 +14,116 @@ from markdown import markdown
 from .models import Program, Mentor, Mentee
 
 
-class MentorForm(forms.ModelForm):
-    privacy = forms.BooleanField(required=True)
+def generate_unique_pseudonym(mentor: Mentor):
+    queryset = [mentor.nick for mentor in Mentor.objects.all()]
+    first = mentor.first_name.upper()
+    last = mentor.last_name.upper()
+    value = ''.join(random.choices(first, k=3)) + ''.join(random.choices(last, k=3))
+
+    while value in queryset:
+        value = ''.join(random.choices(first, k=3)) + ''.join(random.choices(last, k=3))
+
+    return value
+
+
+class MentorForm(ModelForm):
+    privacy = BooleanField(required=True)
+
+    class Meta:
+        model = Mentor
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'phone',
+            'program',
+            'qualification',
+            'supervision',
+        ]
+        widgets = {
+            'first_name': TextInput(attrs={'class': 'uk-input'}),
+            'last_name': TextInput(attrs={'class': 'uk-input'}),
+            'email': EmailInput(attrs={'class': 'uk-input'}),
+            'phone': TextInput(attrs={'class': 'uk-input'}),
+            'program': Select(attrs={'class': 'uk-select'}),
+            'qualification': CheckboxInput(attrs={'class': 'uk-checkbox'}),
+            'supervision': CheckboxInput(attrs={'class': 'uk-checkbox'}),
+        }
+        labels = {
+            'first_name': "Vorname",
+            'last_name': "Nachname",
+            'email': "E-Mail Adresse",
+            'phone': "Mobilnummer",
+            'program': "Studiengang",
+            'qualification': "Qualifizierung",
+            'supervision': "Supervision",
+        }
+        error_messages = {
+            'email': {
+                'unique': "Ein*e Student*in mit dieser E-Mail Adresse ist bereits registriert.",
+            }
+        }
 
     def __init__(self, *args, **kwargs):
-        faculty = kwargs.pop('faculty', None)
+        self.faculty = kwargs.pop('faculty', None)
         super().__init__(*args, **kwargs)
-        self.fields['faculty'].initial = faculty
-        self.fields['program'].queryset = Program.objects.order_by('name').filter(faculty=faculty)
+        self.fields['program'].queryset = Program.objects.order_by('name').filter(faculty=self.faculty)
 
-        if faculty.ask_for_phone:
+        if self.faculty.ask_for_phone:
             self.fields['phone'].required = True
 
-        if faculty.ask_for_program:
-            self.fields['program'].required = True
-
-        if not faculty.ask_for_phone:
+        else:
             self.fields['phone'].widget.attrs['disabled'] = True
 
-        if not faculty.ask_for_program:
+        if self.faculty.ask_for_program:
+            self.fields['program'].required = True
+
+        else:
             self.fields['program'].widget.attrs['disabled'] = True
 
     def clean_first_name(self):
-        data = self.cleaned_data['first_name']
-        return data.title()
+        data = self.cleaned_data['first_name'].title()
+        return data
 
     def clean_last_name(self):
-        data = self.cleaned_data['last_name']
-        return data.title()
+        data = self.cleaned_data['last_name'].title()
+        return data
 
     def clean_email(self):
-        data = self.cleaned_data['email']
-        return data.lower()
+        data = self.cleaned_data['email'].lower()
+        if data.split('@')[1] != 'st.ovgu.de':
+            raise ValidationError("Es sind nur E-Mail Adressen mit der Domain 'st.ovgu.de' erlaubt.", code='invalid')
+
+        return data
 
     def clean(self):
-        cleaned_data = super().clean()
-        faculty = cleaned_data.get('faculty')
-        phone = cleaned_data.get('phone', None)
-        program = cleaned_data.get('program')
-        if faculty.ask_for_phone:
-            if not phone:
-                self.add_error('phone', "Es wird deine Mobilnummer benötigt.")
+        super().clean()
 
-        if faculty.ask_for_program:
-            if not program:
-                self.add_error('program', "Es wird dein Studiengang benötigt.")
+        if date.today() > self.faculty.deadline:
+            raise ValidationError("Die Anmeldefrist ist bereits vorbei!", code='closed')
 
-        if program.faculty != faculty:
-            self.add_error('program', "Es können nur Studiengänge passend zur Fakultät ausgewählt werden.")
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.faculty = self.faculty
+        instance.nick = generate_unique_pseudonym(instance)
 
-        if date.today() > faculty.deadline:
-            raise forms.ValidationError("Die Anmeldefrist ist bereits vorbei!", code='registration closed')
+        if commit:
+            instance.save()
+
+        return instance
 
     def send_email(self, request):
-        faculty = self.cleaned_data['faculty']
         payload = {
             'iss': self.cleaned_data['email'],
             'iat': timezone.now(),
-            'exp': datetime.combine(faculty.deadline, time()) - timedelta(weeks=1),  # TODO fix wrong time
+            'exp': datetime.combine(self.faculty.deadline, time()) - timedelta(weeks=1),  # TODO fix wrong time
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256').decode('utf8')
         data = {
             'name': self.cleaned_data['first_name'],
-            'link': request.build_absolute_uri(reverse('mentoring:token', kwargs={'token': token})),
-            'date': faculty.deadline - timedelta(weeks=1),
-            'faculty': faculty
+            'link': request.build_absolute_uri(reverse('mentoring:mentor-token', kwargs={'token': token})),
+            'date': self.faculty.deadline - timedelta(weeks=1),
+            'faculty': self.faculty
         }
         message = render_to_string('mentoring/mail/mentor.md', data)
         send_mail(  # TODO set 'reply to' to fara mail
@@ -89,48 +134,9 @@ class MentorForm(forms.ModelForm):
             html_message=markdown(message)
         )
 
-    class Meta:
-        model = Mentor
-        fields = ['first_name', 'last_name', 'email', 'phone', 'faculty', 'program', 'qualification', 'supervision']
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'email': forms.TextInput(attrs={'class': 'uk-input'}),
-            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
-            'faculty': forms.HiddenInput(),
-            'program': forms.Select(attrs={'class': 'uk-select'}),
-            'qualification': forms.CheckboxInput(attrs={'class': 'uk-checkbox'}),
-            'supervision': forms.CheckboxInput(attrs={'class': 'uk-checkbox'}),
-        }
-        labels = {
-            'first_name': "Vorname",
-            'last_name': "Nachname",
-            'email': "E-Mail Adresse",
-            'phone': "Mobilnummer",
-            'faculty': "Fakultät",
-            'program': "Studiengang",
-            'qualification': "Qualifizierung",
-            'supervision': "Supervision",
-        }
-        error_messages = {
-            'email': {
-                'unique': "Ein Student oder eine Studentin mit dieser E-Mail Adresse ist bereits registriert.",
-            }
-        }
 
-
-class MenteeForm(forms.ModelForm):
-    mentor = forms.ChoiceField(
-        choices=[('', "---------")],
-        widget=forms.Select(attrs={'class': 'uk-select'}),
-        label='Mentor bzw. Mentorin',
-        required=True,
-    )
-    privacy = forms.BooleanField(required=True)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['mentor'].choices += [(mentor.pk, mentor.slug) for mentor in get_list_or_404(Mentor)]
+class MenteeForm(ModelForm):
+    privacy = BooleanField(required=True)
 
     def clean_mentor(self):
         data = self.cleaned_data['mentor']
@@ -157,23 +163,16 @@ class MenteeForm(forms.ModelForm):
 
     class Meta:
         model = Mentee
-        fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'mentor']
+        fields = ['first_name', 'last_name', 'phone', 'address', 'mentor']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'email': forms.EmailInput(attrs={'class': 'uk-input'}),
-            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
-            'address': forms.TextInput(attrs={'class': 'uk-input'}),
+            'first_name': TextInput(attrs={'class': 'uk-input'}),
+            'last_name': TextInput(attrs={'class': 'uk-input'}),
+            'phone': TextInput(attrs={'class': 'uk-input'}),
+            'address': TextInput(attrs={'class': 'uk-input'}),
         }
         labels = {
             'first_name': "Vorname",
             'last_name': "Nachname",
-            'email': "E-Mail Adresse",
             'phone': "Mobilnummer",
             'address': 'Anschrift',
-        }
-        error_messages = {
-            'email': {
-                'unique': "Ein Student oder eine Studentin mit dieser E-Mail Adresse ist bereits registriert.",
-            }
         }

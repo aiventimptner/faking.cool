@@ -3,8 +3,8 @@
 {% block content %}
     <div class="uk-container uk-container-small uk-padding-small uk-padding-remove-horizontal">
         <div class="uk-card uk-card-default">
-            <div class="uk-card-header" style="background-color: {{ faculty.color_as_hex }};">
-                <h5 class="uk-text-center" style="color: #FFFFFF">Fachschaftsrat {{ faculty.name }}</h5>
+            <div class="uk-card-header" style="background-color: {{ faculty.color }};">
+                <h3 class="uk-card-title uk-text-center" style="color: #FFFFFF">Fachschaftsrat {{ faculty.name }}</h3>
             </div>
 
             <div class="uk-card-body">
@@ -26,10 +26,7 @@
 
                 <form method="post">
                     <fieldset class="uk-grid-small uk-fieldset" uk-grid>
-
                         {% csrf_token %}
-
-                        {{ form.faculty }}
 
                         <div class="uk-width-1-2@s">
                             <label class="uk-form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>

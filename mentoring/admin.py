@@ -3,12 +3,25 @@ import csv
 from django.contrib import admin
 from django.http import HttpResponse
 
-from .models import Mentor, Faculty, Program, Mentee
+from .models import Faculty, Program, Mentor, Mentee
+
+
+@admin.register(Faculty)
+class FacultyAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'ask_for_phone', 'ask_for_program', 'deadline']
+    ordering = ['slug']
+
+
+@admin.register(Program)
+class ProgramAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug']
+    list_filter = ['faculty']
+    ordering = ['slug']
 
 
 @admin.register(Mentor)
 class MentorAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'slug', 'qualification', 'supervision', 'created']
+    list_display = ['full_name', 'qualification', 'supervision', 'created']
     list_filter = ['faculty', 'program']
     ordering = ['first_name', 'last_name']
     actions = ['export_as_csv']
@@ -29,19 +42,6 @@ class MentorAdmin(admin.ModelAdmin):
         return response
 
     export_as_csv.short_description = "Auswahl als CSV exportieren"
-
-
-@admin.register(Faculty)
-class FacultyAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'ask_for_phone', 'ask_for_program', 'deadline']
-    ordering = ['slug']
-
-
-@admin.register(Program)
-class ProgramAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug']
-    list_filter = ['faculty']
-    ordering = ['slug']
 
 
 @admin.register(Mentee)

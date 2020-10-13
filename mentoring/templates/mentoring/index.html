@@ -38,10 +38,10 @@
 
         <h3>Zur Registrierung</h3>
         <div class="uk-margin-bottom">
-        {% for faculty in faculty_list %}
-            <a class="uk-button uk-button-secondary uk-margin-small-bottom" href="{% url 'mentoring:create' faculty.slug %}" style="background-color: {{ faculty.color_as_hex }}">{{ faculty.slug|upper }}</a>
-        {% endfor %}
-            <a class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom" href="{% url 'mentoring:mentee' %}">Registrierung für Erstsemester</a>
+            {% for faculty in faculties %}
+                <a class="uk-button uk-button-secondary uk-margin-small-bottom" href="{% url 'mentoring:mentor-create' faculty.slug %}" style="background-color: {{ faculty.color }}">{{ faculty.slug }}</a>
+            {% endfor %}
+            <a class="uk-button uk-button-secondary uk-width-1-1 uk-margin-small-bottom" href="{% url 'mentoring:mentee-create' %}">Registrierung für Erstsemester</a>
         </div>
     </div>
 {% endblock %}

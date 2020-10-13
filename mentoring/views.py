@@ -3,50 +3,54 @@ import jwt
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views.generic import TemplateView
+from django.views.generic.edit import CreateView, DeleteView
 
 from .models import Faculty, Mentor
 from .forms import MentorForm, MenteeForm
 
 
-class IndexView(generic.ListView):
+class IndexView(TemplateView):
     template_name = 'mentoring/index.html'
-    context_object_name = 'faculty_list'
 
-    def get_queryset(self):
-        return Faculty.objects.order_by('slug')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['faculties'] = Faculty.objects.all()
+        return context
 
 
-class MentorCreate(generic.edit.CreateView):
+class MentorCreate(CreateView):
     template_name = 'mentoring/mentor/form.html'
     form_class = MentorForm
     success_url = 'success/'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['faculty'] = get_object_or_404(Faculty, slug=self.kwargs['faculty_slug'])
+        context = super().get_context_data()
+        context['faculty'] = get_object_or_404(Faculty, slug=self.kwargs['faculty'])
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['faculty'] = get_object_or_404(Faculty, slug=self.kwargs['faculty_slug'])
+        kwargs['faculty'] = get_object_or_404(Faculty, slug=self.kwargs['faculty'])
         return kwargs
     
     def form_valid(self, form):
         form.send_email(self.request)
+        print(self.request)
+        # form.instance.faculty
         return super().form_valid(form)
 
 
-class SuccessView(generic.TemplateView):
+class MentorSuccess(TemplateView):
     template_name = 'mentoring/mentor/success.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        context['faculty'] = get_object_or_404(Faculty, slug=self.kwargs['faculty_slug'])
+        context['faculty'] = get_object_or_404(Faculty, slug=self.kwargs['faculty'])
         return context
 
 
-class TokenView(generic.TemplateView):
+class MentorToken(TemplateView):
     template_name = 'mentoring/mentor/delete.html'
 
     def get_context_data(self, **kwargs):
@@ -71,12 +75,12 @@ class TokenView(generic.TemplateView):
         return context
 
 
-class MentorDelete(generic.edit.DeleteView):
+class MentorDelete(DeleteView):
     model = Mentor
     success_url = reverse_lazy('mentoring:delete')
 
 
-class MenteeCreate(generic.edit.CreateView):
+class MenteeCreate(CreateView):
     template_name = 'mentoring/mentee/form.html'
     form_class = MenteeForm
     success_url = 'success/'
@@ -86,5 +90,5 @@ class MenteeCreate(generic.edit.CreateView):
         return super().form_valid(form)
 
 
-class MenteeSuccess(generic.TemplateView):
+class MenteeSuccess(TemplateView):
     template_name = 'mentoring/mentee/success.html'
