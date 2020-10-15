@@ -136,7 +136,10 @@ class MentorForm(forms.ModelForm):
 
 
 class MenteeForm(forms.ModelForm):
-    OPTIONS = [('', '---------')] + [(mentor.id, mentor.nick) for mentor in Mentor.objects.all()]
+    OPTIONS = [('', '---------')] + sorted(
+        [(mentor.id, mentor.nick) for mentor in Mentor.objects.all()],
+        key=lambda tup: tup[1]
+    )
     mentor = forms.ChoiceField(
         choices=OPTIONS,
         widget=forms.Select(attrs={'class': 'uk-select'}),
