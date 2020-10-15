@@ -1,7 +1,12 @@
 import csv
 
+from django.core import mail
+from django.core.mail import EmailMultiAlternatives
 from django.contrib import admin, messages
+from django.conf import settings
 from django.http import HttpResponse
+from django.template.loader import render_to_string
+from markdown import markdown
 
 from .forms import generate_unique_pseudonym
 from .models import Faculty, Program, Mentor, Mentee
@@ -25,7 +30,7 @@ class MentorAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'qualification', 'supervision', 'created']
     list_filter = ['faculty', 'program']
     ordering = ['first_name', 'last_name']
-    actions = ['export_as_csv', 'generate_nickname']
+    actions = ['export_as_csv', 'generate_nickname', 'send_email_with_nickname']
 
     def export_as_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
@@ -54,6 +59,28 @@ class MentorAdmin(admin.ModelAdmin):
 
         self.message_user(request, f"Es wurden {counter} Mentor*innen aktualisiert.", messages.SUCCESS)
     generate_nickname.short_description = "Zufällig Nicknamen generieren"
+
+    def send_email_with_nickname(self, request, queryset):
+        email_list = []
+        for mentor in queryset:
+            data = {
+                'name': mentor.first_name,
+                'nick': mentor.nick,
+                'faculty': mentor.faculty,
+            }
+            message = render_to_string('mentoring/mail/mentor_info.md', data)
+            email = EmailMultiAlternatives(
+                "Dein Nickname für die Mentee-Registrierung",
+                message,
+                settings.EMAIL_HOST_USER,
+                [mentor.email],
+            )
+            email.attach_alternative(markdown(message), 'text/html')
+            email_list.append(email)
+        connection = mail.get_connection()
+        connection.send_messages(email_list)
+        self.message_user(request, f"Es wurden {len(email_list)} Mails verschickt.")
+    send_email_with_nickname.short_description = "Nickname an Mentoren schicken"
 
 
 @admin.register(Mentee)
