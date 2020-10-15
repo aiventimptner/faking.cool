@@ -7,6 +7,10 @@ validate_color = RegexValidator(regex=r'^#[0-9A-F]{6}$',
 validate_phone = RegexValidator(regex=r'^\+[1-9]{1}[0-9]{3,14}$',
                                 message="Die Mobilnummer ist nur im Format '+49123456789' erlaubt.")
 
+validate_nick = RegexValidator(regex=r'^[A-ZÄÖÜ]{6}$',
+                               message="Der Nickname muss 6 Zeichen enthalten und nur aus den Buchstaben A-Z "
+                                       "oder ÄÖÜ bestehen.")
+
 
 class Faculty(models.Model):
     name = models.CharField(max_length=100)
@@ -32,7 +36,7 @@ class Program(models.Model):
 class Mentor(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    nick = models.SlugField(unique=True, null=True)
+    nick = models.SlugField(unique=True, validators=[validate_nick], blank=True, null=True)
     email = models.EmailField(unique=True, validators=[validate_email])
     phone = models.CharField(max_length=20, validators=[validate_phone], blank=True)
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
