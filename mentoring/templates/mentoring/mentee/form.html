@@ -54,15 +54,15 @@
                             {% endif %}
                         </div>
 
-                        <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.email.id_for_label }}">
-                                {{ form.email.label }}
+                        <div class="uk-width-1-1">
+                            <label class="uk-form-label" for="{{ form.address.id_for_label }}">
+                                {{ form.address.label }}
                             </label>
 
-                            {{ form.email }}
+                            {{ form.address }}
 
-                            {% if form.email.errors %}
-                                {% for error in form.email.errors %}
+                            {% if form.address.errors %}
+                                {% for error in form.address.errors %}
                                     <p class="uk-text-small uk-text-danger uk-margin-remove">
                                         {{ error }}
                                     </p>
@@ -79,22 +79,6 @@
 
                             {% if form.phone.errors %}
                                 {% for error in form.phone.errors %}
-                                    <p class="uk-text-small uk-text-danger uk-margin-remove">
-                                        {{ error }}
-                                    </p>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-
-                        <div class="uk-width-1-2@s">
-                            <label class="uk-form-label" for="{{ form.address.id_for_label }}">
-                                {{ form.address.label }}
-                            </label>
-
-                            {{ form.address }}
-
-                            {% if form.address.errors %}
-                                {% for error in form.address.errors %}
                                     <p class="uk-text-small uk-text-danger uk-margin-remove">
                                         {{ error }}
                                     </p>

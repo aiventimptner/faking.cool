@@ -2,7 +2,7 @@ import jwt
 import random
 
 from datetime import datetime, date, time, timedelta
-from django.forms import ModelForm, BooleanField, TextInput, EmailInput, Select, CheckboxInput
+from django import forms
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.mail import send_mail
@@ -26,8 +26,8 @@ def generate_unique_pseudonym(mentor: Mentor):
     return value
 
 
-class MentorForm(ModelForm):
-    privacy = BooleanField(required=True)
+class MentorForm(forms.ModelForm):
+    privacy = forms.BooleanField(required=True)
 
     class Meta:
         model = Mentor
@@ -41,13 +41,13 @@ class MentorForm(ModelForm):
             'supervision',
         ]
         widgets = {
-            'first_name': TextInput(attrs={'class': 'uk-input'}),
-            'last_name': TextInput(attrs={'class': 'uk-input'}),
-            'email': EmailInput(attrs={'class': 'uk-input'}),
-            'phone': TextInput(attrs={'class': 'uk-input'}),
-            'program': Select(attrs={'class': 'uk-select'}),
-            'qualification': CheckboxInput(attrs={'class': 'uk-checkbox'}),
-            'supervision': CheckboxInput(attrs={'class': 'uk-checkbox'}),
+            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
+            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
+            'email': forms.EmailInput(attrs={'class': 'uk-input'}),
+            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
+            'program': forms.Select(attrs={'class': 'uk-select'}),
+            'qualification': forms.CheckboxInput(attrs={'class': 'uk-checkbox'}),
+            'supervision': forms.CheckboxInput(attrs={'class': 'uk-checkbox'}),
         }
         labels = {
             'first_name': "Vorname",
@@ -135,44 +135,35 @@ class MentorForm(ModelForm):
         )
 
 
-class MenteeForm(ModelForm):
-    privacy = BooleanField(required=True)
-
-    def clean_mentor(self):
-        data = self.cleaned_data['mentor']
-        try:
-            mentor = Mentor.objects.get(pk=data)
-
-        except ObjectDoesNotExist:
-            raise ValidationError("Ein Mentor bzw. eine Mentorin mit dieser ID existiert nicht.")
-
-        return mentor
-
-    def send_email(self, request):
-        first_name = self.cleaned_data['first_name']
-        email = self.cleaned_data['email']
-        mentor = self.cleaned_data['mentor']
-        message = render_to_string('mentoring/mail/mentee.md', {'name': first_name, 'faculty': mentor.faculty})
-        send_mail(  # TODO set 'reply to' to fara mail
-            "Du hast dich erfolgreich registriert.",
-            message,
-            settings.EMAIL_HOST_USER,
-            [email],
-            html_message=markdown(message)
-        )
+class MenteeForm(forms.ModelForm):
+    OPTIONS = [('', '---------')] + [(mentor.id, mentor.nick) for mentor in Mentor.objects.all()]
+    mentor = forms.ChoiceField(
+        choices=OPTIONS,
+        widget=forms.Select(attrs={'class': 'uk-select'}),
+        label="Mentor*in",
+        required=True,
+    )
+    privacy = forms.BooleanField(required=True)
 
     class Meta:
         model = Mentee
         fields = ['first_name', 'last_name', 'phone', 'address', 'mentor']
         widgets = {
-            'first_name': TextInput(attrs={'class': 'uk-input'}),
-            'last_name': TextInput(attrs={'class': 'uk-input'}),
-            'phone': TextInput(attrs={'class': 'uk-input'}),
-            'address': TextInput(attrs={'class': 'uk-input'}),
+            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
+            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
+            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
+            'address': forms.TextInput(attrs={'class': 'uk-input'}),
+            # 'mentor': forms.Select(attrs={'class': 'uk-select'}),
         }
         labels = {
             'first_name': "Vorname",
             'last_name': "Nachname",
             'phone': "Mobilnummer",
-            'address': 'Anschrift',
+            'address': "Anschrift",
+            # 'mentor': "Mentor*in",
         }
+
+    def clean_mentor(self):
+        data = self.cleaned_data['mentor']
+        mentor = Mentor.objects.get(pk=data)
+        return mentor

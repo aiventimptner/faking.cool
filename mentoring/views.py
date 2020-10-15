@@ -85,10 +85,6 @@ class MenteeCreate(CreateView):
     form_class = MenteeForm
     success_url = 'success/'
 
-    def form_valid(self, form):
-        form.send_email(self.request)
-        return super().form_valid(form)
-
 
 class MenteeSuccess(TemplateView):
     template_name = 'mentoring/mentee/success.html'
