@@ -26,6 +26,11 @@ def generate_unique_pseudonym(mentor: Mentor):
     return value
 
 
+class MentorModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.nick
+
+
 class MentorForm(forms.ModelForm):
     privacy = forms.BooleanField(required=True)
 
@@ -136,13 +141,9 @@ class MentorForm(forms.ModelForm):
 
 
 class MenteeForm(forms.ModelForm):
-    OPTIONS = [('', '---------')] + sorted(
-        [(mentor.id, mentor.nick) for mentor in Mentor.objects.all()],
-        key=lambda tup: tup[1]
-    )
-    mentor = forms.ChoiceField(
-        choices=OPTIONS,
-        widget=forms.Select(attrs={'class': 'uk-select'}),
+    mentor = MentorModelChoiceField(
+        queryset=Mentor.objects.all(),
+        widget=forms.Select(attrs={'class': "uk-select"}),
         label="Mentor*in",
         required=True,
     )
@@ -156,17 +157,10 @@ class MenteeForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
             'phone': forms.TextInput(attrs={'class': 'uk-input'}),
             'address': forms.TextInput(attrs={'class': 'uk-input'}),
-            # 'mentor': forms.Select(attrs={'class': 'uk-select'}),
         }
         labels = {
             'first_name': "Vorname",
             'last_name': "Nachname",
             'phone': "Mobilnummer",
             'address': "Anschrift",
-            # 'mentor': "Mentor*in",
         }
-
-    def clean_mentor(self):
-        data = self.cleaned_data['mentor']
-        mentor = Mentor.objects.get(pk=data)
-        return mentor
