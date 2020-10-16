@@ -142,7 +142,7 @@ class MentorForm(forms.ModelForm):
 
 class MenteeForm(forms.ModelForm):
     mentor = MentorModelChoiceField(
-        queryset=Mentor.objects.all(),
+        queryset=Mentor.objects.order_by('nick').all(),
         widget=forms.Select(attrs={'class': "uk-select"}),
         label="Mentor*in",
         required=True,
