@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block body %}
+<section class="hero is-fullheight">
+    <div class="hero-head">
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <span class="navbar-burger" data-target="navbarMenu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+
+                <div id="navbarMenu" class="navbar-menu">
+                    <div class="navbar-end">
+                        <div class="navbar-item dropdown is-right is-hoverable">
+                            <div class="dropdown-trigger">
+                                <a href="https://pad.faking.cool" class="has-text-grey-dark">
+                                    <span class="icon-text">
+                                        <span class="icon">
+                                            <i class="fas fa-sticky-note"></i>
+                                        </span>
+                                        <span>Pad</span>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-pad" role="menu">
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item">
+                                        Kollaboratives Tool zum gemeinsamen Schreiben von schnellen Notizen.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navbar-item dropdown is-right is-hoverable">
+                            <div class="dropdown-trigger">
+                                <a href="https://cloud.faking.cool" class="has-text-grey-dark">
+                                    <span class="icon-text">
+                                        <span class="icon">
+                                            <i class="fas fa-cloud"></i>
+                                        </span>
+                                        <span>Cloud</span>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-cloud" role="menu">
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item">
+                                        Sammlung von Gedächtnisprotokollen für Module an der FMB, FEIT und FVST.
+                                    </div>
+                                    <hr class="dropdown-divider">
+                                    <div class="dropdown-item">
+                                        Eine Registrierung wird benötigt.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="hero-body">
+        <div class="container is-max-desktop has-text-centered">
+            <figure class="image is-128x128 mx-auto mb-3">
+                <img src="{% static 'logo.png' %}" alt="Logo">
+            </figure>
+
+            <p class="title">FakIng ['fʌkɪŋ]</p>
+            <p class="subtitle">Fakultät der Ingenieure</p>
+
+            <p>
+                Die <strong>Fakultät der Ingenieure</strong> ist ein Zusammenschluss der Fachschaftsräte
+                <a target="_blank" href="https://farafmb.de">Maschinenbau</a>,
+                <a target="_blank" href="https://www.farafeit.de">Elektro- & Informationstechnik</a> sowie
+                <a target="_blank" href="https://www.farafvst.ovgu.de">Verfahrens- & Systemtechnik</a> der
+                <a target="_blank" href="https://www.ovgu.de">Otto-von-Guericke-Universität</a> Magdeburg. Diese
+                Kooperation bündelt Ressourcen für gemeinsame Ideen & Ziele, welche für alle Studierenden der drei
+                Fakultäten von Nutzen sind.
+            </p>
+        </div>
+    </div>
+
+    <div class="hero-foot">
+        <nav class="tabs">
+            <div class="container">
+                <ul>
+                    <li><a href="https://stura-md.de/impressum/">Impressum</a></li>
+                    <li><a href="https://stura-md.de/datenschutz/">Datenschutz</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</section>
+{% endblock %}
