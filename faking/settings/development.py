@@ -1,15 +1,30 @@
-from .base import *
+from .common import *  # noqa
 
-
-# General settings
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
-# Static files
+# Database
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
+    }
+}
+
+
+# Files
+
+STATIC_ROOT = BASE_DIR / 'static'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Security
+
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SECURE = False
