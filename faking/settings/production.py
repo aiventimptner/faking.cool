@@ -1,38 +1,33 @@
-from .base import *
+from .common import *  # noqa
 
-
-# General settings
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = [
+    'faking.cool',
+    'www.faking.cool',
+] + os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+
+ADMINS = [('Fachschaftsrat Maschinenbau', 'farafmb@ovgu.de')]
 
 
-# Database
+# File storage
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USERNAME'),
-        'PASSWORD': os.getenv('DB_PASSWORD')
-    }
-}
+STATIC_ROOT = BASE_DIR / 'data' / 'static'
 
-
-# Static Files
-
-STATIC_ROOT = BASE_DIR / 'static'
+MEDIA_ROOT = BASE_DIR / 'data' / 'media'
 
 
 # Secure Connections
 
-CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000
 
-SECURE_REFERRER_POLICY = 'origin'
+SECURE_HSTS_PRELOAD = True
 
-SECURE_SSL_REDIRECT = False  # nginx already redirects http traffic to https
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+SECURE_SSL_REDIRECT = False  # We're using nginx as reverse proxy
 
 SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True

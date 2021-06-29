@@ -16,7 +16,7 @@ DATABASES = {
 }
 
 
-# Files
+# File storage
 
 STATIC_ROOT = BASE_DIR / 'static'
 
