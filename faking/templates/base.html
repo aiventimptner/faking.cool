@@ -1,19 +1,22 @@
-{% load static %}
-
-<!DOCTYPE html>
+<!DOCTYPE html>{% load static %}
 <html lang="de">
     <head>
-        <meta charset="UTF-8">
-        <title>Mentoring</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="{% static 'css/uikit.min.css' %}">
+        <title>{% block title %}FakIng{% endblock %}</title>
+
+        <!-- Styles -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bulma.min.css' %}">
+
+        <!-- Scripts -->
+        {% block scripts %}
+        <script src="{% static 'js/fontawesome.min.js' %}"></script>
+        {% endblock %}
     </head>
     <body>
-        <div class="uk-section uk-padding-remove-vertical uk-height-viewport" style="background-color: #7A003F">
+        <section class="section">
             {% block content %}{% endblock %}
-        </div>
-
-        <script src="{% static 'js/uikit.min.js' %}"></script>
-        <script src="{% static 'js/uikit-icons.min.js' %}"></script>
+        </section>
     </body>
 </html>
