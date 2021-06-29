@@ -3,17 +3,16 @@ import os
 from pathlib import Path
 
 
-# General settings
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-BASE_DIR = Path(__file__).parents[2]
-
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.environ['SECRET_KEY']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'mentoring.apps.MentoringConfig',
+    'mentoring',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,8 +56,12 @@ WSGI_APPLICATION = 'faking.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('SQL_NAME', 'faking'),
+        'USER': os.getenv('SQL_USER', 'faking'),
+        'PASSWORD': os.getenv('SQL_PASSWORD', ''),
+        'HOST': os.getenv('SQL_HOST', ''),
+        'PORT': os.getenv('SQL_PORT', ''),
     }
 }
 
@@ -67,13 +70,17 @@ DATABASES = {
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST = os.getenv('SMTP_HOST')
+EMAIL_HOST = os.getenv('SMTP_HOST', 'localhost')
 
-EMAIL_PORT = os.getenv('SMTP_PORT')
+EMAIL_PORT = os.getenv('SMTP_PORT', '25')
 
-EMAIL_HOST_USER = os.getenv('SMTP_USERNAME')
+EMAIL_HOST_USER = os.getenv('SMTP_USER', '')
 
-EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD')
+EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD', '')
+
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_EMAIL', 'noreply@faking.cool')
+
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'noreply@faking.cool')
 
 
 # Password validation
@@ -96,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 
-LANGUAGE_CODE = 'de-DE'
+LANGUAGE_CODE = 'de-de'
 
 TIME_ZONE = 'Europe/Berlin'
 
@@ -110,3 +117,10 @@ USE_TZ = True
 # Static files
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+
+# Default primary key field type
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
