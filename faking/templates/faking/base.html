@@ -7,18 +7,14 @@
         <title>{% block title %}FakIng{% endblock %}</title>
 
         <!-- Styles -->
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bulma.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'faking/css/bulma.min.css' %}">
 
         <!-- Scripts -->
         {% block scripts %}
-        <script src="{% static 'js/fontawesome.min.js' %}"></script>
+        <script src="{% static 'faking/js/fontawesome.min.js' %}"></script>
         {% endblock %}
     </head>
     <body>
-        <section class="section">
-            {% block content %}{% endblock %}
-        </section>
-
-        {% include 'footer.html' %}
+        {% block content %}{% endblock %}
     </body>
 </html>
