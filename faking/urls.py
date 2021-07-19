@@ -4,6 +4,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', lambda request: render(request, 'faking/index.html')),
+    path('mentoring/', include('mentoring.urls')),
     path('votes/', include('votes.urls')),
     path('admin/', admin.site.urls),
 ]
