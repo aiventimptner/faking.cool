@@ -1,0 +1,43 @@
+{% extends 'votes/base_decision.html' %}
+
+{% block main %}
+<div class="notification">
+    <button class="delete"></button>
+    Die E-Mail Adressen werden nur von Mitglieder aus Organen angezeigt, bei welchem du selbst Mitglied bist.
+</div>
+
+{% for team in team_list %}
+<div class="box">
+    <h1 class="title is-4">{{ team }}</h1>
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Nr</th>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Eingeladen von</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for membership in team.membership_set.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ membership.user.get_full_name }}</td>
+                {% if request.user in membership.user.friends %}
+                    <td>{{ membership.user.email }}</td>
+                {% else %}
+                <td class="has-text-grey">
+                    <span class="icon is-small">
+                        <i class="fas fa-user-secret fa-sm"></i>
+                    </span>
+                    Versteckt
+                </td>
+                {% endif %}
+                <td>{{ membership.invitation.creator.get_full_name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endfor %}
+{% endblock %}

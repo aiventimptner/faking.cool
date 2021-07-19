@@ -1,0 +1,67 @@
+{% extends 'votes/base_decision.html' %}
+
+{% load static %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'votes/js/copy-link.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+<div class="notification">
+    <button class="delete"></button>
+    Es werden nur Einladungen für Organe angezeigt, bei welchen du selbst Mitglied bist.
+</div>
+
+<div class="box">
+    <h1 class="title is-4">Alle Einladungen</h1>
+
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Token</th>
+                <th>Organ(e)</th>
+                <th>Gültig bis</th>
+                <th>Ersteller:in</th>
+                <th>Erstellt am</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invitation in invitation_list %}
+            <tr>
+                <td>{{ invitation.id }}</td>
+                <td>
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input class="input" type="text" value="{{ invitation.token }}" readonly>
+                        </div>
+                        <div class="control">
+                            <button class="button copy-link" data-tooltip="Copied!">
+                                <span class="icon">
+                                    <i class="fas fa-copy"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <ul>
+                        {% for team in invitation.teams.all %}
+                        <li>{{ team.slug }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>{{ invitation.expiry }}</td>
+                <td>{{ invitation.creator.get_full_name }}</td>
+                <td>{{ invitation.created }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Es wurden noch keine Einladungen erstellt.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
