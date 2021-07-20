@@ -1,34 +1,7 @@
-import jwt
-import random
-
-from datetime import datetime, date, time, timedelta
 from django import forms
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.urls import reverse
-from django.utils import timezone
-from markdown import markdown
+from django.core.exceptions import ValidationError
 
-from .models import Program, Mentor, Mentee
-
-
-def generate_unique_pseudonym(mentor: Mentor):
-    queryset = [mentor.nick for mentor in Mentor.objects.all()]
-    first = mentor.first_name.upper()
-    last = mentor.last_name.upper()
-    value = ''.join(random.choices(first, k=3)) + ''.join(random.choices(last, k=3))
-
-    while value in queryset:
-        value = ''.join(random.choices(first, k=3)) + ''.join(random.choices(last, k=3))
-
-    return value
-
-
-class MentorModelChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, obj):
-        return obj.nick
+from .models import Program, Mentor
 
 
 class MentorForm(forms.ModelForm):
@@ -36,55 +9,26 @@ class MentorForm(forms.ModelForm):
 
     class Meta:
         model = Mentor
-        fields = [
-            'first_name',
-            'last_name',
-            'email',
-            'phone',
-            'program',
-            'qualification',
-            'supervision',
-        ]
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'email': forms.EmailInput(attrs={'class': 'uk-input'}),
-            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
-            'program': forms.Select(attrs={'class': 'uk-select'}),
-            'qualification': forms.CheckboxInput(attrs={'class': 'uk-checkbox'}),
-            'supervision': forms.CheckboxInput(attrs={'class': 'uk-checkbox'}),
-        }
+        fields = ['first_name', 'last_name', 'email', 'phone', 'program']
         labels = {
             'first_name': "Vorname",
             'last_name': "Nachname",
-            'email': "E-Mail Adresse",
+            'email': "E-Mail-Adresse",
             'phone': "Mobilnummer",
             'program': "Studiengang",
-            'qualification': "Qualifizierung",
-            'supervision': "Supervision",
         }
-        error_messages = {
-            'email': {
-                'unique': "Ein*e Student*in mit dieser E-Mail Adresse ist bereits registriert.",
-            }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': "input"}),
+            'last_name': forms.TextInput(attrs={'class': "input"}),
+            'email': forms.EmailInput(attrs={'class': "input"}),
+            'phone': forms.TextInput(attrs={'class': "input"}),
+            'program': forms.Select(attrs={'class': "select"}),
         }
 
     def __init__(self, *args, **kwargs):
         self.faculty = kwargs.pop('faculty', None)
         super().__init__(*args, **kwargs)
-        self.fields['program'].queryset = Program.objects.order_by('name').filter(faculty=self.faculty)
-
-        if self.faculty.ask_for_phone:
-            self.fields['phone'].required = True
-
-        else:
-            self.fields['phone'].widget.attrs['disabled'] = True
-
-        if self.faculty.ask_for_program:
-            self.fields['program'].required = True
-
-        else:
-            self.fields['program'].widget.attrs['disabled'] = True
+        self.fields['program'].queryset = Program.objects.filter(faculty=self.faculty).order_by('name')
 
     def clean_first_name(self):
         data = self.cleaned_data['first_name'].title()
@@ -96,71 +40,34 @@ class MentorForm(forms.ModelForm):
 
     def clean_email(self):
         data = self.cleaned_data['email'].lower()
-        if data.split('@')[1] != 'st.ovgu.de':
-            raise ValidationError("Es sind nur E-Mail Adressen mit der Domain 'st.ovgu.de' erlaubt.", code='invalid')
-
+        if data.split('@')[1] not in ['st.ovgu.de', 'ovgu.de']:
+            raise ValidationError("Es sind nur E-Mail-Adressen der "
+                                  "Otto-von-Guericke-Universität Magdeburg erlaubt.", code='blocked')
         return data
 
-    def clean(self):
-        super().clean()
+    def clean_phone(self):
+        data = self.cleaned_data['phone'].replace(' ', '')
 
-        if date.today() > self.faculty.deadline:
-            raise ValidationError("Die Anmeldefrist ist bereits vorbei!", code='closed')
+        # Define allowed values
+        allowed_values = set([str(x) for x in range(10)])  # 0-9
+        allowed_values.update(['+', '-', '/'])
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.faculty = self.faculty
-        instance.nick = generate_unique_pseudonym(instance)
+        # Check for invalid values
+        for value in data:
+            if value not in allowed_values:
+                raise ValidationError("Es können nur Zahlen (0-9) und einige "
+                                      "Symbole (+, -, /) verwendet werden.", code='invalid')
 
-        if commit:
-            instance.save()
+        # Check for country code
+        if data.startswith('00'):
+            data = '+' + data[2:]
 
-        return instance
+        if not data.startswith('+'):
+            raise ValidationError("Bitte gibt deine Mobilnummer inklusive "
+                                  "Ländervorwahl (z.B. +49, 0049) an.", code='ambiguous')
 
-    def send_email(self, request):
-        payload = {
-            'iss': self.cleaned_data['email'],
-            'iat': timezone.now(),
-            'exp': datetime.combine(self.faculty.deadline, time()) - timedelta(weeks=1),  # TODO fix wrong time
-        }
-        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256').decode('utf8')
-        data = {
-            'name': self.cleaned_data['first_name'],
-            'link': request.build_absolute_uri(reverse('mentoring:mentor-token', kwargs={'token': token})),
-            'date': self.faculty.deadline - timedelta(weeks=1),
-            'faculty': self.faculty
-        }
-        message = render_to_string('mentoring/mail/mentor.md', data)
-        send_mail(  # TODO set 'reply to' to fara mail
-            "Du hast dich erfolgreich registriert.",
-            message,
-            settings.EMAIL_HOST_USER,
-            [self.cleaned_data['email']],
-            html_message=markdown(message)
-        )
+        # Remove unnecessary values
+        data = '+' + data[1:].replace('+', '')
+        data = data.replace('-', '').replace('/', '')
 
-
-class MenteeForm(forms.ModelForm):
-    mentor = MentorModelChoiceField(
-        queryset=Mentor.objects.order_by('nick').all(),
-        widget=forms.Select(attrs={'class': "uk-select"}),
-        label="Mentor*in",
-        required=True,
-    )
-    privacy = forms.BooleanField(required=True)
-
-    class Meta:
-        model = Mentee
-        fields = ['first_name', 'last_name', 'phone', 'address', 'mentor']
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'last_name': forms.TextInput(attrs={'class': 'uk-input'}),
-            'phone': forms.TextInput(attrs={'class': 'uk-input'}),
-            'address': forms.TextInput(attrs={'class': 'uk-input'}),
-        }
-        labels = {
-            'first_name': "Vorname",
-            'last_name': "Nachname",
-            'phone': "Mobilnummer",
-            'address': "Anschrift",
-        }
+        return data
