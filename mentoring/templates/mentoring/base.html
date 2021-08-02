@@ -1,9 +1,7 @@
 {% extends 'faking/base.html' %}
 
-{% block content %}
-    <section class="section">
-        <div class="container">
-            {% block main %}{% endblock %}
-        </div>
-    </section>
+{% block section %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 {% endblock %}
