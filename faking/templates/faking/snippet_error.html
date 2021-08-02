@@ -1,0 +1,14 @@
+<section class="hero is-fullheight is-{{ color|default:'warning' }}">
+    <div class="hero-body">
+        <div>
+            <p class="title">{{ title }}</p>
+            <p class="subtitle">{{ subtitle }}</p>
+
+            {% if description %}
+                <p class="mb-5">{{ description }}</p>
+            {% endif %}
+
+            <a href="{% url 'landing_page' %}" class="button is-dark">Zur Startseite</a>
+        </div>
+    </div>
+</section>

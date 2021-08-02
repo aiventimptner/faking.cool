@@ -1,26 +1,26 @@
 <!DOCTYPE html>{% load static %}
 <html lang="de">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{% block title %}FakIng{% endblock %}</title>
+    <title>{% block title %}FakIng{% endblock %}</title>
 
-        <!-- Styles -->
-        <link rel="stylesheet" type="text/css" href="{% static 'faking/css/bulma.min.css' %}">
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="{% static 'faking/css/bulma.min.css' %}">
 
-        <!-- Scripts -->
-        {% block scripts %}
+    <!-- Scripts -->
+    {% block scripts %}
         <script src="{% static 'faking/js/fontawesome.min.js' %}"></script>
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}
-        <section class="section">
-            {% block content %}{% endblock %}
-        </section>
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    <section class="section">
+        {% block section %}{% endblock %}
+    </section>
 
-        {% include 'faking/footer.html' %}
-        {% endblock %}
-    </body>
+    {% include 'faking/footer.html' %}
+{% endblock %}
+</body>
 </html>

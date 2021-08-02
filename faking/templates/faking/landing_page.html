@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'faking/base.html' %}
 
 {% load static %}
 
@@ -56,6 +56,30 @@
                                     <hr class="dropdown-divider">
                                     <div class="dropdown-item">
                                         Eine Registrierung wird benötigt.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navbar-item dropdown is-right is-hoverable">
+                            <div class="dropdown-trigger">
+                                <a href="{% url 'votes:decisions' %}" class="has-text-grey-dark">
+                                    <span class="icon-text">
+                                        <span class="icon">
+                                            <i class="fas fa-vote-yea"></i>
+                                        </span>
+                                        <span>Vote</span>
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-vote" role="menu">
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item">
+                                        Tool zum Durchführen von Abstimmungen.
+                                    </div>
+                                    <hr class="dropdown-divider">
+                                    <div class="dropdown-item">
+                                        Zugriff nur für Mitglieder eines Fachschaftsrates.
                                     </div>
                                 </div>
                             </div>

@@ -1,5 +1,5 @@
-{% extends 'faking/base_info.html' %}
+{% extends 'faking/base.html' %}
 
 {% block body %}
-{% include 'faking/snippet_info.html' with color='danger' title="403" subtitle="Forbidden" description="Hier geht es nicht weiter. Schade aber auch ..." %}
+    {% include 'faking/snippet_error.html' with color='danger' title="403" subtitle="Forbidden" description="Hier geht es nicht weiter! Schade aber auch." %}
 {% endblock %}
