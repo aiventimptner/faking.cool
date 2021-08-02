@@ -1,0 +1,5 @@
+{% extends 'faking/base_info.html' %}
+
+{% block body %}
+{% include 'faking/snippet_info.html' with color='warning' title=500 subtitle="Internal Server Error" description="Da ist bei uns wohl etwas schief gelaufen. Einfach noch einmal probieren!" %}
+{% endblock %}

@@ -11,6 +11,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # Application definition
 
 INSTALLED_APPS = [
+    'votes',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -126,3 +128,11 @@ MEDIA_URL = '/media/'
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Auth routes
+
+LOGIN_REDIRECT_URL = '/admin/'
+
+LOGIN_URL = '/admin/login/'
+
+LOGOUT_REDIRECT_URL = '/'

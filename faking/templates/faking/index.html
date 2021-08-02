@@ -1,0 +1,77 @@
+{% extends 'faking/base.html' %}
+
+{% block content %}
+<div class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">FakIng ['fʌkɪŋ]</h1>
+            <h2 class="subtitle">Fakultät der Ingenieure</h2>
+            <p>
+                Die <strong>Fakultät der Ingenieure</strong> ist ein Zusammenschluss der Fachschaftsräte
+                <a target="_blank" href="https://farafmb.de">Maschinenbau</a>,
+                <a target="_blank" href="https://www.farafeit.de">Elektro- & Informationstechnik</a> sowie
+                <a target="_blank" href="https://www.farafvst.ovgu.de">Verfahrens- & Systemtechnik</a> der
+                <a target="_blank" href="https://www.ovgu.de">Otto-von-Guericke-Universität</a> Magdeburg. Diese
+                Kooperation bündelt Ressourcen für gemeinsame Ideen & Ziele, welche für alle Studierenden der drei
+                Fakultäten von Nutzen sind.
+            </p>
+            <div class="tile is-ancestor p-4">
+                <div class="tile is-parent">
+                    <a href="https://cloud.faking.cool" class="tile is-child box">
+                        <p class="title is-4">
+                            <span class="icon-text">
+                                <span class="icon mr-2">
+                                    <i class="fas fa-cloud"></i>
+                                </span>
+                                <span>FakIng-Cloud</span>
+                            </span>
+                        </p>
+                        <p>
+                            Die <strong>FakIng-Cloud</strong> ist eine Sammlung von Gedächtnisprotokollen für
+                            die meisten Module an der FMB, FEIT und FVST. Der Zugriff ist nach selbstständiger
+                            Registrierung und manueller Freischaltung durch einen der beteiligten Fachschaftsräte
+                            möglich.
+                        </p>
+                    </a>
+                </div>
+
+                <div class="tile is-parent">
+                    <a href="https://pad.faking.cool" class="tile is-child box">
+                        <p class="title is-4">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-sticky-note"></i>
+                                </span>
+                                <span class="ml-2">FakIng-Pad</span>
+                            </span>
+                        </p>
+                        <p>
+                            Das <strong>FakIng-Pad</strong> ist ein kollaboratives Tool zum gemeinsamen Erstellen von
+                            schnellen Notizen. Es kann frei von allen benutzt werden, eine Registrierung wird nicht
+                            benötigt! Die Pads sind allerdings uneingeschränkt einsehbar, wir raten also davon ab
+                            vertrauliche Inhalte dort einzutragen.
+                        </p>
+                    </a>
+                </div>
+
+                <div class="tile is-parent">
+                    <a href="{% url 'votes:decisions' %}" class="tile is-child box">
+                        <p class="title is-4">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-vote-yea"></i>
+                                </span>
+                                <span class="ml-2">FakIng-Vote</span>
+                            </span>
+                        </p>
+                        <p>
+                            <strong>FakIng-Vote</strong> ist ein Dienst zum Durchführen von Abstimmungen. Die Verwendung
+                            ist ausschließlich für unsere Mitglieder:innen aus den Fachschaftsräten vorbehalten.
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

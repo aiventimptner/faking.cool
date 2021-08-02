@@ -1,0 +1,76 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item has-text-primary has-text-weight-bold" href="{% url 'votes:decisions' %}">VOTES</a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarMain" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'votes:decisions' %}">Stimme abgeben</a>
+            <a class="navbar-item" href="{% url 'votes:results' %}">Ergebnisse</a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Abstimmungen</a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" href="{% url 'votes:create' %}">Neu erstellen</a>
+                    <a class="navbar-item" href="{% url 'votes:owned' %}">Eigene anzeigen</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Einladungen</a>
+
+                <div class="navbar-dropdown is-right">
+                    <a class="navbar-item" href="{% url 'votes:invite' %}">Neu erstellen</a>
+                    <a class="navbar-item" href="{% url 'votes:invitations' %}">Alle anzeigen</a>
+                </div>
+            </div>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Mitgliedschaften</a>
+
+                <div class="navbar-dropdown is-right">
+                    {% for team in request.user.teams.all %}
+                    <div class="navbar-item">{{ team }}</div>
+                    {% empty %}
+                    <div class="navbar-item">Kein Mitglied eines Teams</div>
+                    {% endfor %}
+
+                    <hr class="navbar-divider">
+
+                    <a class="navbar-item" href="{% url 'votes:join' %}">Team beitreten</a>
+                    <a class="navbar-item" href="{% url 'votes:teams' %}">Alle Teams anzeigen</a>
+                </div>
+            </div>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">{{ request.user|title }}</a>
+
+                <div class="navbar-dropdown is-right">
+                    {% if request.user.get_full_name %}
+                        <div class="navbar-item">{{ request.user.get_full_name }}</div>
+                    {% endif %}
+
+                    {% if request.user.email %}
+                        <div class="navbar-item">{{ request.user.email }}</div>
+                    {% endif %}
+
+                    {% if request.user.get_full_name or request.user.email %}
+                        <hr class="navbar-divider">
+                    {% endif %}
+
+                    <a class="navbar-item" href="{% url 'admin:password_change' %}">Passwort ändern</a>
+                    <a class="navbar-item" href="{% url 'admin:logout' %}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

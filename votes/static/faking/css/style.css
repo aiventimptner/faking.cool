@@ -1,0 +1,22 @@
+html {
+    overflow-y: auto;
+}
+
+.list-unstyled {
+    display: inline;
+    list-style: none !important;
+    margin: 0 !important;
+}
+
+.list-unstyled li {
+    display: inline;
+    margin-top: 0 !important;
+}
+
+.list-unstyled li:after {
+    content: ", ";
+}
+
+.list-unstyled li:last-child:after {
+    content: "";
+}
