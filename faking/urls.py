@@ -5,6 +5,7 @@ from django.shortcuts import render
 
 urlpatterns = [
     path('', lambda request: render(request, 'faking/index.html')),
+    path('mentoring/', include('mentoring.urls')),
     path('votes/', include('votes.urls')),
     path('admin/', admin.site.urls),
 ]

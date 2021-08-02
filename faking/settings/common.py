@@ -11,6 +11,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # Application definition
 
 INSTALLED_APPS = [
+    'mentoring',
     'votes',
 
     'django.contrib.admin',
