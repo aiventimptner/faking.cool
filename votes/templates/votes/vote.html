@@ -1,71 +1,71 @@
-{% extends 'votes/base_decision.html' %}
+{% extends 'votes/base.html' %}
 
-{% block main %}
-<div class="notification is-{{ decision.state.color }}">
-    <button class="delete"></button>
+{% block content %}
+    <div class="notification is-{{ decision.state.color }}">
+        <button class="delete"></button>
 
-    {% if decision.state.code == 'pending' %}
-    Die Abstimmung beginnt erst in einiger Zeit.
-    Du musst dich noch bis {{ decision.start }} gedulden.
-    {% elif decision.state.code == 'open' %}
-    Die Abstimmung hat begonnen.
-    Du hast bis {{ decision.end }} die Möglichkeit deine Stimme abzugeben.
-    {% else %}
-    Die Abstimmung ist bereits zu Ende.
-    Du kannst dir das Ergebnis <a href="{% url 'votes:result' decision.id %}">hier</a> einsehen.
-    {% endif %}
-</div>
-
-{% if user_has_voted and decision.state.code != 'closed' %}
-<div class="notification is-warning">
-    <button class="delete"></button>
-    Du hast bereits abgestimmt!
-</div>
-{% endif %}
-
-<div class="box">
-    <h1 class="title is-4">Stimme abgeben</h1>
-
-    <p><strong>{{ decision.subject }}</strong></p>
-
-    {% if entitled_to_vote %}
-    <form method="post">
-        {% csrf_token %}
-
-        <fieldset{% if user_has_voted or decision.state.code != 'open' %} disabled{% endif %}>
-
-        <div class="field">
-            {% for radio in form.option %}
-            <div class="control">
-                <label class="radio" for="{{ radio.id_for_label }}">
-                    {{ radio.tag }}
-                    {{ radio.choice_label }}
-                </label>
-            </div>
-            {% endfor %}
-
-            {% for error in form.subject.errors %}
-            <p class="help is-danger">{{ error }}</p>
-            {% endfor %}
-        </div>
-
-        <button type="submit" class="button is-primary">Abstimmen</button>
-
-        {% for error in form.non_field_errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-
-        </fieldset>
-    </form>
-    {% else %}
-    <div class="notification is-danger">
-        <p class="block">
-            <strong>Du bist nicht stimmberechtigt!</strong> Solltest du fälschlicherweise doch
-            zur Stimmabgabe berechtigt sein, so wende dich an die Person, welche die Abstimmung
-            erstellt hat. Diese findest du in der Übersicht zur Abstimmung unter "Ersteller:in".
-        </p>
-        <a class="button is-light" href="{% url 'votes:info' decision.id %}">Zurück zur Übersicht</a>
+        {% if decision.state.code == 'pending' %}
+            Die Abstimmung beginnt erst in einiger Zeit.
+            Du musst dich noch bis {{ decision.start }} gedulden.
+        {% elif decision.state.code == 'open' %}
+            Die Abstimmung hat begonnen.
+            Du hast bis {{ decision.end }} die Möglichkeit deine Stimme abzugeben.
+        {% else %}
+            Die Abstimmung ist bereits zu Ende.
+            Du kannst dir das Ergebnis <a href="{% url 'votes:result' decision.id %}">hier</a> einsehen.
+        {% endif %}
     </div>
+
+    {% if user_has_voted and decision.state.code != 'closed' %}
+        <div class="notification is-warning">
+            <button class="delete"></button>
+            Du hast bereits abgestimmt!
+        </div>
     {% endif %}
-</div>
+
+    <div class="box">
+        <h1 class="title is-4">Stimme abgeben</h1>
+
+        <p><strong>{{ decision.subject }}</strong></p>
+
+        {% if entitled_to_vote %}
+            <form method="post">
+                {% csrf_token %}
+
+                <fieldset{% if user_has_voted or decision.state.code != 'open' %} disabled{% endif %}>
+
+                    <div class="field">
+                        {% for radio in form.option %}
+                            <div class="control">
+                                <label class="radio" for="{{ radio.id_for_label }}">
+                                    {{ radio.tag }}
+                                    {{ radio.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+
+                        {% for error in form.subject.errors %}
+                            <p class="help is-danger">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="button is-primary">Abstimmen</button>
+
+                    {% for error in form.non_field_errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+
+                </fieldset>
+            </form>
+        {% else %}
+            <div class="notification is-danger">
+                <p class="block">
+                    <strong>Du bist nicht stimmberechtigt!</strong> Solltest du fälschlicherweise doch
+                    zur Stimmabgabe berechtigt sein, so wende dich an die Person, welche die Abstimmung
+                    erstellt hat. Diese findest du in der Übersicht zur Abstimmung unter "Ersteller:in".
+                </p>
+                <a class="button is-light" href="{% url 'votes:info' decision.id %}">Zurück zur Übersicht</a>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

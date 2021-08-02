@@ -1,27 +1,27 @@
-{% extends 'votes/base_decision.html' %}
+{% extends 'votes/base.html' %}
 
-{% block main %}
-<div class="box">
-    <form method="post">
-        {% csrf_token %}
+{% block content %}
+    <div class="box">
+        <form method="post">
+            {% csrf_token %}
 
-        <div class="field">
-            <div class="control">
-                <label class="label" for="{{ form.token.id_for_label }}">{{ form.token.label }}</label>
+            <div class="field">
+                <div class="control">
+                    <label class="label" for="{{ form.token.id_for_label }}">{{ form.token.label }}</label>
 
-                {{ form.token }}
+                    {{ form.token }}
 
-                {% for error in form.token.errors %}
-                <p class="help is-danger">{{ error }}</p>
-                {% endfor %}
+                    {% for error in form.token.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <div class="control">
-                <button class="button is-primary" type="submit">Beitreten</button>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary" type="submit">Beitreten</button>
+                </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 {% endblock %}

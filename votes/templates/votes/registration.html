@@ -1,95 +1,96 @@
-{% extends 'faking/base_auth.html' %}
-
-{% block header %}
-{% include 'faking/snippet_auth.html' with title="Registrierung" %}
-{% endblock %}
+{% extends 'votes/base.html' %}
 
 {% block body %}
-<form method="post">
-    {% csrf_token %}
+    <section class="section">
+        <div class="container">
+            <p class="title">Registrierung</p>
+            <form method="post">
+                {% csrf_token %}
 
-    {{ form.token }}
+                {{ form.token }}
 
-    <div class="field">
-        <label class="label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                <div class="field">
+                    <label class="label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
 
-        <div class="control">
-            {{ form.first_name }}
+                    <div class="control">
+                        {{ form.first_name }}
+                    </div>
+
+                    {% for error in form.first_name.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="field">
+                    <label class="label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+
+                    <div class="control">
+                        {{ form.last_name }}
+                    </div>
+
+                    {% for error in form.last_name.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="field">
+                    <label class="label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+
+                    <div class="control">
+                        {{ form.username }}
+                    </div>
+
+                    <p class="help">Bitte verwende den selben Benutzer-Namen wie für deinen Uni-Account.</p>
+
+                    {% for error in form.username.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="field">
+                    <label class="label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+
+                    <div class="control">
+                        {{ form.email }}
+                    </div>
+
+                    <p class="help">Es können nur Adressen mit der Domain <code>st.ovgu.de</code> verwendet werden.</p>
+
+                    {% for error in form.email.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="field">
+                    <label class="label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+
+                    <div class="control">
+                        {{ form.password }}
+                    </div>
+
+                    {% for error in form.password.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        {{ form.password_confirm }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <button type="submit" class="button is-primary">Registrieren</button>
+
+                    {% for error in form.token.errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+
+                    {% for error in form.non_field_errors %}
+                        <p class="help is-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </form>
         </div>
-
-        {% for error in form.first_name.errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    <div class="field">
-        <label class="label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-
-        <div class="control">
-            {{ form.last_name }}
-        </div>
-
-        {% for error in form.last_name.errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    <div class="field">
-        <label class="label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-
-        <div class="control">
-            {{ form.username }}
-        </div>
-
-        <p class="help">Bitte verwende den selben Benutzer-Namen wie für deinen Uni-Account.</p>
-
-        {% for error in form.username.errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    <div class="field">
-        <label class="label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-
-        <div class="control">
-            {{ form.email }}
-        </div>
-
-        <p class="help">Es können nur Adressen mit der Domain <code>st.ovgu.de</code> verwendet werden.</p>
-
-        {% for error in form.email.errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    <div class="field">
-        <label class="label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-
-        <div class="control">
-            {{ form.password }}
-        </div>
-
-        {% for error in form.password.errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    <div class="field">
-        <div class="control">
-            {{ form.password_confirm }}
-        </div>
-    </div>
-
-    <div class="field">
-        <button type="submit" class="button is-primary">Registrieren</button>
-
-        {% for error in form.token.errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-
-        {% for error in form.non_field_errors %}
-        <p class="help is-danger">{{ error }}</p>
-        {% endfor %}
-    </div>
-</form>
+    </section>
 {% endblock %}

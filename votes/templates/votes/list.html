@@ -1,28 +1,29 @@
-{% extends 'votes/base_decision.html' %}
+{% extends 'votes/base.html' %}
 
-{% block main %}
-{% if request.resolver_match.url_name == 'results' %}
-<div class="notification">
-    <button class="delete"></button>
-    Abstimmungen werden vorzeitig geschlossen, sobald alle stimmberechtigten Mitglieder daran teilgenommen haben.
-    Entsprechende Abstimmungen werden jedoch erst nach Ablauf der regulären Frist gelistet.
-</div>
-{% endif %}
+{% block content %}
+    {% if request.resolver_match.url_name == 'results' %}
+        <div class="notification">
+            <button class="delete"></button>
+            Abstimmungen werden vorzeitig geschlossen, sobald alle stimmberechtigten Mitglieder daran teilgenommen
+            haben.
+            Entsprechende Abstimmungen werden jedoch erst nach Ablauf der regulären Frist gelistet.
+        </div>
+    {% endif %}
 
-<nav class="panel is-primary">
-    <p class="panel-heading">
-        {{ title }}
-    </p>
-    {% for decision in decision_list %}
-    <a href="{% url 'votes:info' decision.id %}" class="panel-block">
+    <nav class="panel is-primary">
+        <p class="panel-heading">
+            {{ title }}
+        </p>
+        {% for decision in decision_list %}
+            <a href="{% url 'votes:info' decision.id %}" class="panel-block">
         <span class="panel-icon has-text-{{ decision.state.color }}">
             <i class="{{ decision.state.icon }}" aria-hidden="true"></i>
         </span>
 
-        <p>{{ decision.subject }}</p>
-    </a>
-    {% empty %}
-    <p class="panel-block" disabled>Aktuell sind keine Abstimmungen verfügbar.</p>
-    {% endfor %}
-</nav>
+                <p>{{ decision.subject }}</p>
+            </a>
+        {% empty %}
+            <p class="panel-block" disabled>Aktuell sind keine Abstimmungen verfügbar.</p>
+        {% endfor %}
+    </nav>
 {% endblock %}

@@ -1,71 +1,71 @@
-{% extends 'votes/base_decision.html' %}
+{% extends 'votes/base.html' %}
 
 {% load static %}
 
 {% block scripts %}
-{{ block.super }}
-<script src="{% static 'votes/js/luxon.min.js' %}"></script>
-<script src="{% static 'votes/js/selection-buttons.js' %}"></script>
+    {{ block.super }}
+    <script src="{% static 'votes/js/luxon.min.js' %}"></script>
+    <script src="{% static 'votes/js/selection-buttons.js' %}"></script>
 {% endblock %}
 
-{% block main %}
-<div class="notification">
-    <button class="delete"></button>
-    Du kannst nur Einladungen für Organe erstellen, bei welchen du selbst Mitglied bist.
-</div>
+{% block content %}
+    <div class="notification">
+        <button class="delete"></button>
+        Du kannst nur Einladungen für Organe erstellen, bei welchen du selbst Mitglied bist.
+    </div>
 
-<div class="box">
-    <h1 class="title is-4">Neue Einladung erstellen</h1>
+    <div class="box">
+        <h1 class="title is-4">Neue Einladung erstellen</h1>
 
-    <form method="post">
-        {% csrf_token %}
+        <form method="post">
+            {% csrf_token %}
 
-        <div class="field">
-            <label class="label" for="id_teams">{{ form.teams.label }}</label>
+            <div class="field">
+                <label class="label" for="id_teams">{{ form.teams.label }}</label>
 
-            <div class="control">
-                <ul id="id_teams">
-                    {% for checkbox in form.teams %}
-                    <li>
-                        <label class="checkbox" for="{{ checkbox.id_for_label }}">
-                            {{ checkbox.tag }}
-                            {{ checkbox.choice_label }}
-                        </label>
-                    </li>
-                    {% endfor %}
-                </ul>
+                <div class="control">
+                    <ul id="id_teams">
+                        {% for checkbox in form.teams %}
+                            <li>
+                                <label class="checkbox" for="{{ checkbox.id_for_label }}">
+                                    {{ checkbox.tag }}
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                {% for error in form.teams.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
             </div>
 
-            {% for error in form.teams.errors %}
-            <p class="help is-danger">{{ error }}</p>
-            {% endfor %}
-        </div>
+            <div class="field">
+                <label class="label" for="{{ form.expiry.id_for_label }}">{{ form.expiry.label }}</label>
 
-        <div class="field">
-            <label class="label" for="{{ form.expiry.id_for_label }}">{{ form.expiry.label }}</label>
+                {{ form.expiry }}
 
-            {{ form.expiry }}
+                <div class="buttons has-addons mb-0">
+                    <button type="button" class="button choose-value" value="8">8 Stunden</button>
+                    <button type="button" class="button choose-value" value="24">24 Stunden</button>
+                    <button type="button" class="button choose-value" value="168">1 Woche</button>
+                </div>
 
-            <div class="buttons has-addons mb-0">
-                <button type="button" class="button choose-value" value="8">8 Stunden</button>
-                <button type="button" class="button choose-value" value="24">24 Stunden</button>
-                <button type="button" class="button choose-value" value="168">1 Woche</button>
+                {% for error in form.expiry.errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
             </div>
 
-            {% for error in form.expiry.errors %}
-            <p class="help is-danger">{{ error }}</p>
-            {% endfor %}
-        </div>
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary">Erstellen</button>
+                </div>
 
-        <div class="field">
-            <div class="control">
-                <button type="submit" class="button is-primary">Erstellen</button>
+                {% for error in form.non_field_errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
             </div>
-
-            {% for error in form.non_field_errors %}
-            <p class="help is-danger">{{ error }}</p>
-            {% endfor %}
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 {% endblock %}

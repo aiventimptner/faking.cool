@@ -1,91 +1,93 @@
-{% extends 'votes/base_decision.html' %}
+{% extends 'votes/base.html' %}
 
-{% block main %}
-<div class="box content">
-    <h1 class="title is-4 has-text-primary">Abstimmung {{ decision.id }}</h1>
+{% block content %}
+    <div class="box content">
+        <h1 class="title is-4 has-text-primary">Abstimmung {{ decision.id }}</h1>
 
-    <p class="heading is-size-6 has-text-centered">Details</p>
-    <div class="block">
-        <div class="columns is-multiline">
-            <p class="column is-12">
-                <strong>Gegenstand</strong>
-                <br>
-                {{ decision.subject }}
-            </p>
+        <p class="heading is-size-6 has-text-centered">Details</p>
+        <div class="block">
+            <div class="columns is-multiline">
+                <p class="column is-12">
+                    <strong>Gegenstand</strong>
+                    <br>
+                    {{ decision.subject }}
+                </p>
 
-            <p class="column is-6">
-                <strong>Ersteller:in</strong>
-                <br>
-                {{ decision.author.get_full_name }}
-            </p>
+                <p class="column is-6">
+                    <strong>Ersteller:in</strong>
+                    <br>
+                    {{ decision.author.get_full_name }}
+                </p>
 
-            <p class="column is-6">
-                <strong>Datum</strong>
-                <br>
-                {{ decision.created }}
-            </p>
+                <p class="column is-6">
+                    <strong>Datum</strong>
+                    <br>
+                    {{ decision.created }}
+                </p>
+            </div>
         </div>
-    </div>
 
-    <p class="heading is-size-6 has-text-centered">Stimmberechtigte Personen</p>
-    <div class="block">
-        <ul class="list-unstyled">
-            {% for voter in decision.voters.all %}
-            <li>{{ voter.get_full_name }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <p class="heading is-size-6 has-text-centered">Zeitraum der Abstimmung</p>
-    <div class="block">
-        <div class="columns">
-            <p class="column">
-                <strong>Beginn</strong>
-                <br>
-                {{ decision.start }}
-            </p>
-
-            <p class="column">
-                <strong>Ende</strong>
-                <br>
-                {{ decision.end }}
-            </p>
-        </div>
-    </div>
-
-    {% with path=request.resolver_match.url_name %}
-    <p class="heading is-size-6 has-text-centered">
-        {% if path == 'result' %}
-        Ergebnis
-        {% else %}
-        Wählbare Optionen
-        {% endif %}
-    </p>
-    <div class="block">
-        <table class="table">
-            <tbody>
-                {% for option in decision.options.all %}
-                <tr>
-                    <th>{{ forloop.counter }}</th>
-                    <td>{{ option.text }}</td>
-                    {% if path == 'result' %}
-                    <td>{{ option.votes.count }} Stimme(n)</td>
-                    {% endif %}
-                </tr>
+        <p class="heading is-size-6 has-text-centered">Stimmberechtigte Personen</p>
+        <div class="block">
+            <ul class="list-unstyled">
+                {% for voter in decision.voters.all %}
+                    <li>{{ voter.get_full_name }}</li>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
+            </ul>
+        </div>
 
-    {% if path != 'result' %}
-    <div class="block">
-        {% if decision.state.code == 'closed' %}
-        <a class="button is-info is-fullwidth" href="{% url 'votes:result' decision.id %}">Zum Ergebnis</a>
-        {% else %}
-        <a class="button is-primary is-fullwidth" href="{% url 'votes:vote' decision.id %}">Zur Stimmabgabe</a>
-        {% endif %}
+        <p class="heading is-size-6 has-text-centered">Zeitraum der Abstimmung</p>
+        <div class="block">
+            <div class="columns">
+                <p class="column">
+                    <strong>Beginn</strong>
+                    <br>
+                    {{ decision.start }}
+                </p>
+
+                <p class="column">
+                    <strong>Ende</strong>
+                    <br>
+                    {{ decision.end }}
+                </p>
+            </div>
+        </div>
+
+        {% with path=request.resolver_match.url_name %}
+            <p class="heading is-size-6 has-text-centered">
+                {% if path == 'result' %}
+                    Ergebnis
+                {% else %}
+                    Wählbare Optionen
+                {% endif %}
+            </p>
+            <div class="block">
+                <table class="table">
+                    <tbody>
+                    {% for option in decision.options.all %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ option.text }}</td>
+                            {% if path == 'result' %}
+                                <td>{{ option.votes.count }} Stimme(n)</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if path != 'result' %}
+                <div class="block">
+                    {% if decision.state.code == 'closed' %}
+                        <a class="button is-info is-fullwidth" href="{% url 'votes:result' decision.id %}">Zum
+                            Ergebnis</a>
+                    {% else %}
+                        <a class="button is-primary is-fullwidth" href="{% url 'votes:vote' decision.id %}">Zur
+                            Stimmabgabe</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
-    {% endif %}
-    {% endwith %}
-</div>
 {% endblock %}

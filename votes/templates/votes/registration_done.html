@@ -1,5 +1,17 @@
-{% extends 'faking/base_info.html' %}
+{% extends 'votes/base.html' %}
 
 {% block body %}
-{% include 'faking/snippet_info.html' with color='success' title="Neuer Account angelegt" subtitle="Dein Account wurde erfolgreich erstellt." description="Du hast soeben von uns eine E-Mail bekommen, in welcher du deinen Benutzer und Passwort findest. Logge dich damit ein und ändere anschließend dein Passwort." %}
+    <section class="hero is-success is-fullheight">
+        <div class="hero-body">
+            <div>
+                <p class="title">
+                    Neuer Account angelegt
+                </p>
+                <p class="subtitle">
+                    Dein Account wurde erfolgreich erstellt. Du hast soeben von uns eine E-Mail bekommen, in welcher
+                    du deinen Benutzer und Passwort findest. Logge dich damit ein und ändere anschließend dein Passwort.
+                </p>
+            </div>
+        </div>
+    </section>
 {% endblock %}

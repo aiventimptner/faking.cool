@@ -39,9 +39,9 @@
 
                 <div class="navbar-dropdown is-right">
                     {% for team in request.user.teams.all %}
-                    <div class="navbar-item">{{ team }}</div>
+                        <div class="navbar-item">{{ team }}</div>
                     {% empty %}
-                    <div class="navbar-item">Kein Mitglied eines Teams</div>
+                        <div class="navbar-item">Kein Mitglied eines Teams</div>
                     {% endfor %}
 
                     <hr class="navbar-divider">
