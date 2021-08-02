@@ -15,6 +15,9 @@ class Program(models.Model):
     faculty = models.CharField(max_length=3, choices=FACULTIES)
     name = models.CharField(max_length=100)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 

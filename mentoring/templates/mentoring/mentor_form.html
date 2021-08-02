@@ -1,0 +1,49 @@
+{% extends 'mentoring/base.html' %}
+
+{% block main %}
+    <p class="title">Registrierung als Mentor:in</p>
+
+    {% include 'mentoring/snippets/privacy_info.html' with message=privacy %}
+
+    <div class="box">
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="columns is-multiline">
+                <div class="column is-half">
+                    {% include 'mentoring/forms/input_or_textarea.html' with field=form.first_name %}
+                </div>
+
+                <div class="column is-half">
+                    {% include 'mentoring/forms/input_or_textarea.html' with field=form.last_name %}
+                </div>
+
+                <div class="column is-half">
+                    {% include 'mentoring/forms/input_or_textarea.html' with field=form.email %}
+                </div>
+
+                <div class="column is-half">
+                    {% include 'mentoring/forms/input_or_textarea.html' with field=form.phone %}
+                </div>
+
+                <div class="column is-full">
+                    {% include 'mentoring/forms/select.html' with field=form.program %}
+                </div>
+
+                <div class="column is-full">
+                    {% include 'mentoring/forms/checkbox_privacy.html' with field=form.privacy %}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-primary">Registrieren</button>
+                </div>
+                {% for error in form.non_field_errors %}
+                    <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

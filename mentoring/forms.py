@@ -5,7 +5,7 @@ from .models import Program, Mentor
 
 
 class MentorForm(forms.ModelForm):
-    privacy = forms.BooleanField(required=True)
+    privacy = forms.BooleanField(required=True, label="Datenschutz")
 
     class Meta:
         model = Mentor
@@ -26,9 +26,10 @@ class MentorForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.faculty = kwargs.pop('faculty', None)
+        faculty = kwargs.pop('faculty', None)
         super().__init__(*args, **kwargs)
-        self.fields['program'].queryset = Program.objects.filter(faculty=self.faculty).order_by('name')
+        if faculty:
+            self.fields['program'].queryset = Program.objects.filter(faculty=faculty)
 
     def clean_first_name(self):
         data = self.cleaned_data['first_name'].title()
@@ -64,7 +65,7 @@ class MentorForm(forms.ModelForm):
 
         if not data.startswith('+'):
             raise ValidationError("Bitte gibt deine Mobilnummer inklusive "
-                                  "Ländervorwahl (z.B. +49, 0049) an.", code='ambiguous')
+                                  "Ländervorwahl an. (z.B. +49, 0049)", code='ambiguous')
 
         # Remove unnecessary values
         data = '+' + data[1:].replace('+', '')
