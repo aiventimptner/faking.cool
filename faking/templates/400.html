@@ -1,5 +1,13 @@
-{% extends 'faking/base.html' %}
+{% extends 'faking/base_hero.html' %}
 
-{% block body %}
-    {% include 'faking/snippet_error.html' with color='warning' title="400" subtitle="Bad Request" description="Bitte was? Ich verstehe leider nur Bahnhof." %}
+{% block hero-color %}
+is-warning
+{% endblock %}
+
+{% block hero-title %}
+400
+{% endblock %}
+
+{% block hero-subtitle %}
+Bad Request
 {% endblock %}
