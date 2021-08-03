@@ -1,5 +1,13 @@
-{% extends 'faking/base.html' %}
+{% extends 'faking/base_hero.html' %}
 
-{% block body %}
-    {% include 'faking/snippet_error.html' with color='warning' title=500 subtitle="Internal Server Error" description="Da ist bei uns wohl etwas schief gelaufen. Einfach noch einmal probieren!" %}
+{% block hero-color %}
+is-warning
+{% endblock %}
+
+{% block hero-title %}
+500
+{% endblock %}
+
+{% block hero-subtitle %}
+Internal Server Error
 {% endblock %}
