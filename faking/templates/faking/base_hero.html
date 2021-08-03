@@ -1,0 +1,17 @@
+{% extends 'faking/base.html' %}
+
+{% block body %}
+<section class="hero is-fullheight {% block hero-color %}is-success{% endblock %}">
+    <div class="hero-body">
+        <div class="container">
+            <p class="title">
+                {% block hero-title %}{% endblock %}
+            </p>
+
+            <p class="subtitle">
+                {% block hero-subtitle %}{% endblock %}
+            </p>
+        </div>
+    </div>
+</section>
+{% endblock %}
