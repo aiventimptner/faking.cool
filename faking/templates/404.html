@@ -1,5 +1,13 @@
-{% extends 'faking/base.html' %}
+{% extends 'faking/base_hero.html' %}
 
-{% block body %}
-    {% include 'faking/snippet_error.html' with color='warning' title="404" subtitle="Not Found" description="Hier ist keine Schatztruhe versteckt. Hast du dich vielleicht vertippt?" %}
+{% block hero-color %}
+is-warning
+{% endblock %}
+
+{% block hero-title %}
+404
+{% endblock %}
+
+{% block hero-subtitle %}
+Not Found
 {% endblock %}
